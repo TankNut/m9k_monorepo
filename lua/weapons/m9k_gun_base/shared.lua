@@ -1,5 +1,11 @@
 AddCSLuaFile()
 
+--[[
+	A note about variable naming for GetOwner():
+
+	ply, owner and npc are used interchangably based on which code paths are reachable for which type, SWEP:Think and Reload never get called by NPC's for example so we can safely assume it'll be a player whereas SWEP:PrimaryFire will be called by NPC's, hence the use of owner in that context.
+]]
+
 SWEP.Spawnable = true
 
 SWEP.ViewModelFlip = false
