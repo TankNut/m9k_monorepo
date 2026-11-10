@@ -30,6 +30,11 @@ SWEP.Primary.SpreadIronSights = .015
 
 SWEP.Primary.Sound = "Weapon_FAMTC.Single"
 
+SWEP.Secondary.Ammo = ""
+SWEP.Secondary.Automatic = false
+SWEP.Secondary.ClipSize = 0
+SWEP.Secondary.DefaultClip = 0
+
 include("sh_attack.lua")
 include("sh_reload.lua")
 include("sh_running.lua")
@@ -76,6 +81,9 @@ function SWEP:PrimaryAttack()
 	self:FireWeapon()
 
 	self:SetNextPrimaryFire(CurTime() + 1 / (self.Primary.RPM / 60))
+function SWEP:SecondaryAttack()
+end
+
 end
 
 function SWEP:Think()
