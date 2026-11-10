@@ -53,7 +53,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Float", "NextAction")
 
 	self:NetworkVar("Bool", "Running")
-	self:NetworkVar("Bool", "Automatic") -- Honestly might be better to make it an int so you can do burst fire
+	self:NetworkVar("Bool", "Automatic") -- Honestly might be better to make this an int so you can do burst fire
 	self:NetworkVar("Bool", "Silencer")
 end
 
@@ -64,7 +64,8 @@ end
 function SWEP:CanPrimaryAttack()
 	if self:Clip1() <= 0 then
 		self:EmitSound("Weapon_Pistol.Empty") -- Could be a var
-		self:Reload()
+		self:StartReload()
+		self.Primary.Automatic = false -- Anti-sound spam
 
 		return false
 	end
@@ -87,6 +88,10 @@ function SWEP:PrimaryAttack()
 	self:FireWeapon()
 
 	self:SetNextPrimaryFire(CurTime() + 1 / (self.Primary.RPM / 60))
+
+	self:CheckAmmo()
+end
+
 function SWEP:SecondaryAttack()
 end
 
