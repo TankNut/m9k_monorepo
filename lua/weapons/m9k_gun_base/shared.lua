@@ -35,7 +35,11 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = 0
 SWEP.Secondary.DefaultClip = 0
 
+SWEP.SelectiveFire = true
+SWEP.CanBeSilenced = false
+
 include("sh_attack.lua")
+include("sh_modes.lua")
 include("sh_reload.lua")
 include("sh_running.lua")
 
@@ -46,6 +50,8 @@ end
 
 function SWEP:SetupDataTables()
 	self:NetworkVar("Float", "FinishReload")
+	self:NetworkVar("Float", "NextAction")
+
 	self:NetworkVar("Bool", "Running")
 	self:NetworkVar("Bool", "Automatic") -- Honestly might be better to make it an int so you can do burst fire
 	self:NetworkVar("Bool", "Silencer")
@@ -84,13 +90,16 @@ function SWEP:PrimaryAttack()
 function SWEP:SecondaryAttack()
 end
 
+-- Important for any code that does prediction-y stuff
+function SWEP:PredictionThink()
+	self:UpdateRunning()
+	self:UpdateModes()
 end
 
 function SWEP:Think()
 	-- Alternatively: if SERVER or not game.SinglePlayer() then
-	-- Important for any code that does prediction-y stuff
 	if GetPredictionPlayer():IsValid() then
-		self:UpdateRunning()
+		self:PredictionThink()
 	end
 end
 
