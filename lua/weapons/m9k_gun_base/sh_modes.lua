@@ -4,7 +4,9 @@ function SWEP:ToggleFiremode()
 	local automatic = not self:GetAutomatic()
 	self:SetAutomatic(automatic)
 
-	self:GetOwner():PrintMessage(HUD_PRINTTALK, automatic and "Automatic selected." or "Semi-automatic selected.")
+	if SERVER then
+		self:GetOwner():PrintMessage(HUD_PRINTTALK, automatic and "Automatic selected." or "Semi-automatic selected.")
+	end
 
 	self:SetNextAction(CurTime() + 0.2)
 	self:EmitSound("Weapon_AR2.Empty")
