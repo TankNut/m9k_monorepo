@@ -28,6 +28,13 @@ SWEP.Primary.Damage = 29
 SWEP.Primary.SpreadHip = .025
 SWEP.Primary.SpreadIronSights = .015
 
+SWEP.Primary.KickUp = 0.4 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.4 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.4 -- Maximum side recoil (koolaid)
+
+SWEP.KickUpMultiplier = 2
+SWEP.RecoilKickSpeed = 40
+
 SWEP.Primary.Sound = "Weapon_FAMTC.Single"
 
 SWEP.Secondary.Ammo = ""
@@ -40,6 +47,7 @@ SWEP.CanBeSilenced = false
 
 include("sh_attack.lua")
 include("sh_modes.lua")
+include("sh_recoil.lua")
 include("sh_reload.lua")
 include("sh_running.lua")
 
@@ -55,10 +63,13 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Bool", "Running")
 	self:NetworkVar("Bool", "Automatic") -- Honestly might be better to make this an int so you can do burst fire
 	self:NetworkVar("Bool", "Silencer")
+
+	self:NetworkVar("Angle", "ActiveRecoil")
 end
 
 function SWEP:Deploy()
 	self:SetHoldType(self.HoldType)
+	self:SetActiveRecoil(angle_zero)
 end
 
 function SWEP:CanPrimaryAttack()
@@ -99,6 +110,7 @@ end
 function SWEP:PredictionThink()
 	self:UpdateRunning()
 	self:UpdateModes()
+	self:UpdateRecoil()
 end
 
 function SWEP:Think()

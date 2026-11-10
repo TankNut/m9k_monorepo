@@ -111,5 +111,5 @@ function SWEP:FireWeapon()
 		end
 	})
 
-	-- self:AddRecoil()
+	self:AddRecoil()
 end
