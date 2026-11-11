@@ -81,6 +81,8 @@ function SWEP:Holster()
 end
 
 function SWEP:CanPrimaryAttack()
+	if self:IsReloading() then return false end
+
 	if self:Clip1() <= 0 then
 		self:EmitSound("Weapon_Pistol.Empty") -- Could be a var
 		self:StartReload()
