@@ -70,6 +70,8 @@ end
 function SWEP:Deploy()
 	self:SetHoldType(self.HoldType)
 	self:SetActiveRecoil(angle_zero)
+
+	return true
 end
 
 function SWEP:CanPrimaryAttack()
