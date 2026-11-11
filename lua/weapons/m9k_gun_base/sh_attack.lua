@@ -21,7 +21,7 @@ end
 local shotBiasMin = GetConVar( "ai_shot_bias_min" ):GetFloat()
 local shotBiasMax = GetConVar( "ai_shot_bias_max" ):GetFloat()
 
-local function getSpread( gun, dir, aimcone )
+local function getSpread(gun, dir, aimcone)
 	local owner = gun:GetOwner()
 
 	local dirAng = dir:Angle()
@@ -31,21 +31,21 @@ local function getSpread( gun, dir, aimcone )
 	local x, y, z
 	local bias = 1
 
-	local shotBias = ( ( shotBiasMax - shotBiasMin ) * bias ) + shotBiasMin
-	local flatness = math.abs( bias ) * 0.5
+	local shotBias = ((shotBiasMax - shotBiasMin) * bias) + shotBiasMin
+	local flatness = math.abs(bias) * 0.5
 
 	local cmd = owner:GetCurrentCommand()
-	local seed = "m9k_spread_" .. util.CRC(  gun:GetCreationID() .. gun:EntIndex() .. CurTime() .. owner:GetUserGroup() .. cmd:CommandNumber() .. cmd:TickCount() )
+	local seed = "m9k_spread_" .. util.CRC(gun:GetCreationID() .. gun:EntIndex() .. CurTime() .. owner:GetUserGroup() .. cmd:CommandNumber() .. cmd:TickCount())
 	local seedNum = 0
 
 	local function getRnd()
 		seedNum = seedNum + 1
-		return util.SharedRandom( seed, -1, 1, seedNum )
+		return util.SharedRandom(seed, -1, 1, seedNum)
 	end
 
 	for _ = 1, 1000 do -- Not infinite, just in case
-		x = getRnd() * flatness + getRnd() * ( 1 - flatness )
-		y = getRnd() * flatness + getRnd() * ( 1 - flatness )
+		x = getRnd() * flatness + getRnd() * (1 - flatness)
+		y = getRnd() * flatness + getRnd() * (1 - flatness)
 
 		if shotBias < 0 then
 			x = x >= 0 and 1 - x or -1 - x
@@ -59,10 +59,10 @@ local function getSpread( gun, dir, aimcone )
 		end
 	end
 
-	up:Mul( y * aimcone )
-	right:Mul( x * aimcone )
-	right:Add( up )
-	right:Add( dir )
+	up:Mul(y * aimcone)
+	right:Mul(x * aimcone)
+	right:Add(up)
+	right:Add(dir)
 	right:Normalize()
 
 	return right
