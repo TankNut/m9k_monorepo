@@ -4,13 +4,11 @@ local cvar_DamageMultiplier = GetConVar("M9KDamageMultiplier")
 local cvar_EngineSpread = GetConVar("m9k_enginespread") -- Created in bobs_gun_base
 
 function SWEP:FireEffects()
-	local owner = self:GetOwner()
 	local silenced = self:GetSilencer()
 
-	owner:SetAnimation(PLAYER_ATTACK1)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 
 	self:EmitSound(silenced and self.Primary.SilencedSound or self.Primary.Sound)
-
 	self:SendWeaponAnim(silenced and ACT_VM_PRIMARYATTACK_SILENCED or ACT_VM_PRIMARYATTACK)
 end
 
@@ -40,6 +38,7 @@ local function getSpread(gun, dir, aimcone)
 
 	local function getRnd()
 		seedNum = seedNum + 1
+
 		return util.SharedRandom(seed, -1, 1, seedNum)
 	end
 

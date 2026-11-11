@@ -74,6 +74,12 @@ function SWEP:Deploy()
 	return true
 end
 
+function SWEP:Holster()
+	self:SetFinishReload(0) -- Cancel any in-progress reloads
+
+	return true
+end
+
 function SWEP:CanPrimaryAttack()
 	if self:Clip1() <= 0 then
 		self:EmitSound("Weapon_Pistol.Empty") -- Could be a var
@@ -113,6 +119,7 @@ function SWEP:PredictionThink()
 	self:UpdateRunning()
 	self:UpdateModes()
 	self:UpdateRecoil()
+	self:UpdateReload()
 end
 
 function SWEP:Think()
