@@ -26,6 +26,6 @@ end
 
 function SWEP:StopRunning()
 	if not self.CanShootWhileRunning then
-		self:SetNextPrimaryFire(CurTime() + 0.2)
+		self:SetNextPrimaryFire(CurTime() + self.IronSightTime + 0.05)
 	end
 end
