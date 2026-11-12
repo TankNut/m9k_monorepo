@@ -557,7 +557,7 @@ function SWEP:BulletPenetrate( iteration, attacker, bulletTrace, dmginfo, direct
         Dir = direction,
         Spread = spreadVec,
         Tracer = 1,
-        TracerName = "m9k_effect_mad_penetration_trace",
+        TracerName = "m9k_effect_penetration",
         Force = 5,
         IgnoreEntity = hitEnt:IsPlayer() and hitEnt or nil,
         Damage = dmginfo:GetDamage() * damageMult,
@@ -626,7 +626,7 @@ function SWEP:BulletRicochet( iteration, attacker, bulletTrace, dmginfo, directi
         Dir = ( ( 2 * bulletTrace.HitNormal * dotProduct ) + direction ) + ( VectorRand() * 0.05 ),
         Spread = spreadVec,
         Tracer = SERVER and 1 or 0,
-        TracerName = "m9k_effect_mad_ricochet_trace",
+        TracerName = "m9k_effect_ricochet",
         Force = dmginfo:GetDamage() * 0.15,
         Damage = dmginfo:GetDamage() * 0.5,
         Callback = function( a, b, c )
