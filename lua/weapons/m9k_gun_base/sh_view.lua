@@ -13,7 +13,7 @@ local function simpleSplineRemapValClamped(value, a, b, c, d)
 end
 
 function SWEP:GetZoom()
-	local zoom = self.IronSightZoom
+	local zoom = self.Secondary.ScopeZoom
 
 	if zoom == 0 then
 		-- Uses a static reference FOV so everyone gets the same relative zoom amount

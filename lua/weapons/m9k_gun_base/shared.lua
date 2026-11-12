@@ -25,8 +25,8 @@ SWEP.Primary.RPM = 950
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Damage = 29
 
-SWEP.Primary.SpreadHip = .025
-SWEP.Primary.SpreadIronSights = .015
+SWEP.Primary.SpreadHip = 0.025
+SWEP.Primary.SpreadIronSights = 0.015
 
 SWEP.Primary.KickUp = 0.4 -- Maximum up recoil (rise)
 SWEP.Primary.KickDown = 0.4 -- Maximum down recoil (skeet)
@@ -42,13 +42,13 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = 0
 SWEP.Secondary.DefaultClip = 0
 
-SWEP.Secondary.IronFOV = 55 -- This sucks, it'll work but look at SWEP.IronSightZoom for a better alternative
+SWEP.Secondary.IronFOV = 55 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+SWEP.Secondary.ScopeZoom = 0 -- Overrides SWEP.Secondary.IronFOV when set
 
 SWEP.SelectiveFire = true
 SWEP.CanBeSilenced = false
 
 SWEP.IronSightTime = 0.15
-SWEP.IronSightZoom = 0 -- Takes precedence over SWEP.Secondary.IronFOV when set
 SWEP.ViewModelCorrection = 0 -- How much correction to apply to SWEP.ViewModelFOV when zooming, range [0-1]
 
 SWEP.CustomIdlePos = Vector(0, 0, -1)
