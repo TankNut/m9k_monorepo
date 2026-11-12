@@ -7,10 +7,13 @@ function SWEP:IsReloading()
 end
 
 function SWEP:CheckAmmo()
+	self:SetCheckAmmo(0)
+
 	if self:Clip1() > 0 then return end
 
 	if self:Ammo1() > 0 then
 		self:StartReload()
+
 		return
 	end
 
@@ -62,6 +65,12 @@ function SWEP:UpdateReload()
 
 	if finish > 0 and finish <= CurTime() then
 		self:FinishReload()
+	end
+
+	local check = self:GetCheckAmmo()
+
+	if check > 0 and check <= CurTime() then
+		self:CheckAmmo()
 	end
 end
 

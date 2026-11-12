@@ -78,6 +78,7 @@ end
 function SWEP:SetupDataTables()
 	self:NetworkVar("Float", "FinishReload")
 	self:NetworkVar("Float", "NextAction")
+	self:NetworkVar("Float", "CheckAmmo")
 	self:NetworkVar("Float", "RunState")
 	self:NetworkVar("Float", "AimState")
 
@@ -129,9 +130,10 @@ function SWEP:PrimaryAttack()
 	self:FireEffects()
 	self:FireWeapon()
 
-	self:SetNextPrimaryFire(CurTime() + 1 / (self.Primary.RPM / 60))
+	local delay = 1 / (self.Primary.RPM / 60)
 
-	self:CheckAmmo()
+	self:SetNextPrimaryFire(CurTime() + delay)
+	self:SetCheckAmmo(CurTime() + delay)
 end
 
 function SWEP:SecondaryAttack()
