@@ -48,6 +48,11 @@ local easyPenMaterials = {
 }
 
 function SWEP:BulletPenetration(iteration, attacker, tr, dmg)
+	-- func_breakable already has this built-in, prevents bullets from doubling up
+	if tr.Entity:GetClass() == "func_breakable" then
+		return false
+	end
+
 	local depth = penetrationDepth[self:GetPrimaryAmmoType()] or 5
 
 	if easyPenMaterials[tr.MatType] then
