@@ -57,6 +57,7 @@ SWEP.RunSightsPos = Vector(0.9926, -3.6313, 0.4169)
 SWEP.RunSightsAng = Vector(-9.1165, 43.8507, -18.2067)
 
 include("sh_attack.lua")
+include("sh_bullet.lua")
 include("sh_modes.lua")
 include("sh_recoil.lua")
 include("sh_reload.lua")

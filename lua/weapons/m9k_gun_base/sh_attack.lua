@@ -106,7 +106,7 @@ function SWEP:FireWeapon()
 		Force = damage * 0.25, -- There's better ways to calc this
 		Damage = damage,
 		Callback = function(attacker, tr, dmg)
-			-- BulletCallback
+			self:BulletCallback(0, attacker, tr, dmg)
 		end
 	})
 
