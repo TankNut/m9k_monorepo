@@ -5,7 +5,9 @@ SWEP.Base = "m9k_gun_base"
 
 SWEP.Spawnable = true
 
-SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_m98b")
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_m98b")
+end
 
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 70
