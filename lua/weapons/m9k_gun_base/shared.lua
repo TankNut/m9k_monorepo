@@ -102,11 +102,19 @@ function SWEP:Holster()
 	return true
 end
 
+function SWEP:IsEmpty()
+	if self:GetMaxClip1() == -1 then
+		return self:Ammo1() == 0
+	end
+
+	return self:Clip1() == 0
+end
+
 function SWEP:CanPrimaryAttack()
 	if self:IsReloading() then return false end
 
-	if self:Clip1() <= 0 then
-		self:EmitSound("Weapon_Pistol.Empty") -- Could be a var
+	if self:IsEmpty() then
+		self:EmitSound("Weapon_Pistol.Empty")
 		self:StartReload()
 		self.Primary.Automatic = false -- Anti-sound spam
 

@@ -33,7 +33,7 @@ end
 function SWEP:CanReload()
 	if self:IsReloading() then return false end
 	if self:Clip1() >= self:GetMaxClip1() then return false end
-	if self:Ammo1() <= 0 then return false end
+	if self:Ammo1() == 0 then return false end
 
 	return true
 end
