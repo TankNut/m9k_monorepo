@@ -25,9 +25,9 @@ SWEP.Primary.Damage = 90
 SWEP.Primary.SpreadHip = 0.001
 SWEP.Primary.SpreadIronSights = 0.0001
 
-SWEP.Primary.KickUp = 0.4 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown = 0.4 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0.4 -- Maximum side recoil (koolaid)
+SWEP.Primary.KickUp = 1 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 1 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 1 -- Maximum side recoil (koolaid)
 
 SWEP.KickUpMultiplier = 2
 SWEP.RecoilKickSpeed = 40
