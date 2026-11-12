@@ -56,7 +56,8 @@ function SWEP:BulletPenetration(iteration, attacker, tr, dmg)
 
 	local start = tr.HitPos + tr.Normal * depth
 
-	if not util.IsInWorld(start) then
+	-- Not quite util.IsInWorld but works on both realms
+	if util.PointContents(tr.HitPos) == CONTENTS_SOLID then
 		return false
 	end
 
