@@ -89,3 +89,9 @@ function SWEP:GetViewModelPosition(pos, ang)
 
 	return pos, ang
 end
+
+function SWEP:DoDrawCrosshair()
+	if self:IsReloading() or self:GetRunning() then
+		return true
+	end
+end
