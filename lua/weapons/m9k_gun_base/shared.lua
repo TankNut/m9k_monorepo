@@ -51,10 +51,12 @@ SWEP.IronSightTime = 0.15
 SWEP.IronSightZoom = 0 -- Takes precedence over SWEP.Secondary.IronFOV when set
 SWEP.ViewModelCorrection = 0 -- How much correction to apply to SWEP.ViewModelFOV when zooming, range [0-1]
 
-SWEP.SightsPos = Vector(-3.34, 0, 0.24)
-SWEP.SightsAng = Vector(0, -0.438, 0)
-SWEP.RunSightsPos = Vector(0.9926, -3.6313, 0.4169)
-SWEP.RunSightsAng = Vector(-9.1165, 43.8507, -18.2067)
+SWEP.CustomIdlePos = Vector(0, 0, -1)
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+SWEP.SightsPos = Vector(-1, 0, 0)
+SWEP.SightsAng = Vector(0, 0, 0)
+SWEP.RunSightsPos = Vector(1, -3.6, -1)
+SWEP.RunSightsAng = Vector(-10, 44, -18)
 
 include("sh_attack.lua")
 include("sh_bullet.lua")
@@ -175,7 +177,7 @@ function SWEP:Think()
 
 	if CLIENT then
 		-- TODO: CanShootWhileRunning lerps to 0.25 instead, figure out how to implement this
-		local state = Lerp(self:GetAimState(), 1, 0.05)
+		local state = Lerp(self:GetAimState(), 1, 0.25)
 
 		self.SwayScale = state
 		self.BobScale = state

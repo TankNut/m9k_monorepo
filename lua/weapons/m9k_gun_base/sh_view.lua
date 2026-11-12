@@ -78,8 +78,14 @@ function SWEP:AddViewModelOffset(fraction, pos, ang, offsetPos, offsetAng)
 end
 
 function SWEP:GetViewModelPosition(pos, ang)
-	self:AddViewModelOffset(self:GetAimState(), pos, ang, self.SightsPos, self.SightsAng)
-	self:AddViewModelOffset(self:GetRunState(), pos, ang, self.RunSightsPos, self.RunSightsAng)
+	local aim, run = self:GetAimState(), self:GetRunState()
+
+	-- Done this way so that sight and sprint offsets are separate rather than additive
+	local idle = 1 - math.min(aim + run, 1)
+
+	self:AddViewModelOffset(aim, pos, ang, self.SightsPos, self.SightsAng)
+	self:AddViewModelOffset(run, pos, ang, self.RunSightsPos, self.RunSightsAng)
+	self:AddViewModelOffset(idle, pos, ang, self.CustomIdlePos, self.CustomIdleAng)
 
 	return pos, ang
 end
