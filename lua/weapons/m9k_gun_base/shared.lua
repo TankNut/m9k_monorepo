@@ -135,9 +135,21 @@ end
 function SWEP:SecondaryAttack()
 end
 
+function SWEP:ShouldRunState()
+	if self:IsReloading() then return false end
+
+	return self:GetRunning()
+end
+
+function SWEP:ShouldAimState()
+	if self:GetRunning() then return false end
+
+	return self:GetOwner():KeyDown(IN_ATTACK2)
+end
+
 function SWEP:UpdateStates()
-	local running = self:GetRunning()
-	local aiming = not running and self:GetOwner():KeyDown(IN_ATTACK2)
+	local running = self:ShouldRunState()
+	local aiming = self:ShouldAimState()
 
 	local rate = (1 / self.IronSightTime) * FrameTime()
 
