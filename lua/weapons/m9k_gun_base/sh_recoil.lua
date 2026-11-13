@@ -1,12 +1,15 @@
 AddCSLuaFile()
 
 function SWEP:AddRecoil()
-	local pitch = math.Rand(-self.Primary.KickDown, -self.Primary.KickUp * self.KickUpMultiplier)
-	local yaw = math.Rand(-self.Primary.KickHorizontal, self.Primary.KickHorizontal)
+	local pitch = util.SharedRandom("m9k_recoil_pitch", -self.Primary.KickDown, -self.Primary.KickUp * self.KickUpMultiplier)
+	local yaw = util.SharedRandom("m9k_recoil_yaw", -self.Primary.KickHorizontal, self.Primary.KickHorizontal)
 
 	-- Ironsight code here
 
-	self:SetActiveRecoil(self:GetActiveRecoil() + Angle(pitch, yaw, 0))
+	local recoil = self:GetActiveRecoil() + Angle(pitch, yaw, 0)
+	recoil:Normalize()
+
+	self:SetActiveRecoil(recoil)
 end
 
 function SWEP:UpdateRecoil()
