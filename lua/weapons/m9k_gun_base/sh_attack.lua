@@ -106,9 +106,21 @@ function SWEP:FireWeapon()
 		Force = damage * 0.25, -- There's better ways to calc this
 		Damage = damage,
 		Callback = function(attacker, tr, dmg)
-			self:BulletCallback(0, attacker, tr, dmg)
+			self:QueueBulletCallback(0, attacker, tr, dmg)
 		end
 	})
 
+	-- Queue-based callback handler to prevent issues with NumShots > 1
+	local callbacks = self.PendingBulletCallbacks
+	local i = 0
+
+	while i < #callbacks do
+		i = i + 1
+
+		local callback = callbacks[i]
+		self:HandleBulletCallback(callback[1], callback[2], callback[3], callback[4])
+	end
+
+	self.PendingBulletCallbacks = {}
 	self:AddRecoil()
 end

@@ -47,7 +47,7 @@ local easyPenMaterials = {
 	[MAT_ALIENFLESH] = true
 }
 
-function SWEP:BulletPenetration(iteration, attacker, tr, dmg)
+function SWEP:BulletPenetration(iteration, attacker, tr, damage)
 	-- func_breakable already has this built-in, prevents bullets from doubling up
 	if tr.Entity:GetClass() == "func_breakable" then
 		return false
@@ -78,7 +78,7 @@ function SWEP:BulletPenetration(iteration, attacker, tr, dmg)
 	if not backTrace.Hit then return false end
 	if backTrace.Fraction >= 0.99 or backTrace.Fraction <= 0.01 then return false end
 
-	local damage = dmg:GetDamage() * (penetrationDamageMult[tr.MatType] or 0.5) -- Use the same material for both depth and damage
+	damage = damage * (penetrationDamageMult[tr.MatType] or 0.5) -- Use the same material for both depth and damage
 
 	attacker:FireBullets({
 		Inflictor = self,
@@ -92,7 +92,7 @@ function SWEP:BulletPenetration(iteration, attacker, tr, dmg)
 		Damage = damage,
 		IgnoreEntity = tr.Entity:IsPlayer() and tr.Entity or nil,
 		Callback = function(attacker_, tr_, dmg_)
-			self:BulletCallback(iteration, attacker_, tr_, dmg_)
+			self:QueueBulletCallback(iteration, attacker_, tr_, dmg_)
 		end
 	})
 
@@ -129,9 +129,9 @@ local function sharedRandomInt(name, min, max, seed)
 	return math.Round(util.SharedRandom(name, min, max, seed))
 end
 
-function SWEP:BulletRicochet(iteration, attacker, tr, dmg)
 	if not ricochetAmmo[self:GetPrimaryAmmoType()] then return false end
 	if sharedRandomInt("m9k_ricochet", 1, 4, iteration) != 1 then return false end
+function SWEP:BulletRicochet(iteration, attacker, tr, damage)
 
 	if tr.MatType != MAT_METAL then
 		-- None of this other code makes sense so I'm just leaving it
@@ -144,7 +144,7 @@ function SWEP:BulletRicochet(iteration, attacker, tr, dmg)
 
 	-- No minimum angle for deflection? Alright
 	local dir = ((2 * tr.HitNormal * dot) + tr.Normal) + VectorRand() * 0.05
-	local damage = dmg:GetDamage() * 0.5
+	damage = damage * 0.5
 
 	attacker:FireBullets({
 		Inflictor = self,
@@ -158,25 +158,29 @@ function SWEP:BulletRicochet(iteration, attacker, tr, dmg)
 		Damage = damage,
 		IgnoreEntity = tr.Entity,
 		Callback = function(attacker_, tr_, dmg_)
-			self:BulletCallback(iteration, attacker_, tr_, dmg_)
+			self:QueueBulletCallback(iteration, attacker_, tr_, dmg_)
 		end
 	})
 
 	return true
 end
 
-function SWEP:BulletCallback(iteration, attacker, tr, dmg)
+function SWEP:HandleBulletCallback(iteration, attacker, tr, damage)
 	iteration = iteration + 1
 
 	if iteration > (maxIterations[self:GetPrimaryAmmoType()] or 14) then
 		return
 	end
 
-	if not cvar_DisablePenetration:GetBool() and self:BulletPenetration(iteration, attacker, tr, dmg) then
+	if not cvar_DisablePenetration:GetBool() and self:BulletPenetration(iteration, attacker, tr, damage) then
 		return
 	end
 
 	if not cvar_DisableRicochet:GetBool() then
-		self:BulletRicochet(iteration, attacker, tr, dmg)
+		self:BulletRicochet(iteration, attacker, tr, damage)
 	end
+end
+
+function SWEP:QueueBulletCallback(iteration, attacker, tr, dmg)
+	table.insert(self.PendingBulletCallbacks, {iteration, attacker, tr, dmg:GetDamage()})
 end
