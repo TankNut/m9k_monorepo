@@ -53,7 +53,7 @@ function SWEP:BulletPenetration(iteration, attacker, tr, damage)
 		return false
 	end
 
-	local depth = penetrationDepth[self:GetPrimaryAmmoType()] or 5
+	local depth = penetrationDepth[self.Primary.Ammo] or 5
 
 	if easyPenMaterials[tr.MatType] then
 		depth = depth * 2
@@ -125,13 +125,12 @@ local ricochetAmmo = {
 	["SniperPenetratedRound"] = true
 }
 
-local function sharedRandomInt(name, min, max, seed)
-	return math.Round(util.SharedRandom(name, min, max, seed))
+local function sharedRandomChance(name, percentage, seed)
+	return percentage >= util.SharedRandom(name, 0, 100, seed)
 end
 
-	if not ricochetAmmo[self:GetPrimaryAmmoType()] then return false end
-	if sharedRandomInt("m9k_ricochet", 1, 4, iteration) != 1 then return false end
 function SWEP:BulletRicochet(iteration, attacker, tr, damage)
+	if not ricochetAmmo[self.Primary.Ammo] and sharedRandomChance("m9k_ricochet", 75) then return false end
 
 	if tr.MatType != MAT_METAL then
 		-- None of this other code makes sense so I'm just leaving it
