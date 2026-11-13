@@ -5,10 +5,6 @@ SWEP.Base = "m9k_gun_base"
 
 SWEP.Spawnable = true
 
-if CLIENT then
-	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_m98b")
-end
-
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 70
 
@@ -45,7 +41,7 @@ SWEP.Secondary.ScopeZoom = 9 -- Overrides SWEP.Secondary.IronFOV when set
 SWEP.Secondary.UseACOG = false
 SWEP.Secondary.UseMilDot = false
 SWEP.Secondary.UseSVD = false
-SWEP.Secondary.UseParabolic = true
+SWEP.Secondary.UseParabolic = false
 SWEP.Secondary.UseElcan = false
 SWEP.Secondary.UseGreenDuplex = false
 SWEP.Secondary.UseAimpoint = false
