@@ -47,6 +47,7 @@ SWEP.RecoilKickSpeed = 40
 
 -- Sounds
 SWEP.Primary.Sound = ""
+SWEP.Primary.SilencedSound = ""
 
 -- Do not use
 SWEP.Secondary.Ammo = ""
@@ -151,12 +152,16 @@ function SWEP:CanPrimaryAttack()
 	return true
 end
 
+function SWEP:TakeAmmo()
+	self:TakePrimaryAmmo(1)
+end
+
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 
 	self.Primary.Automatic = self:GetAutomatic()
 
-	self:TakePrimaryAmmo(1)
+	self:TakeAmmo()
 
 	self:FireEffects()
 	self:FireWeapon()
