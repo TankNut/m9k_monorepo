@@ -6,6 +6,8 @@ AddCSLuaFile()
 	ply, owner and npc are used interchangably based on which code paths are reachable for which type, SWEP:Think and Reload never get called by NPC's for example so we can safely assume it'll be a player whereas SWEP:PrimaryFire will be called by NPC's, hence the use of owner in that context.
 ]]
 
+SWEP.m_WeaponDeploySpeed = 10
+
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
 
@@ -84,6 +86,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Float", "CheckAmmo")
 	self:NetworkVar("Float", "RunState")
 	self:NetworkVar("Float", "AimState")
+	self:NetworkVar("Float", "NextIdle")
 
 	self:NetworkVar("Bool", "Running")
 	self:NetworkVar("Bool", "Automatic") -- Honestly might be better to make this an int so you can do burst fire
@@ -95,6 +98,9 @@ end
 function SWEP:Deploy()
 	self:SetHoldType(self.HoldType)
 	self:SetActiveRecoil(angle_zero)
+
+	self:SetWeaponAnim(self:GetSilencer() and ACT_VM_DRAW_SILENCED or ACT_VM_DRAW)
+	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
 
 	return true
 end
@@ -172,12 +178,21 @@ function SWEP:UpdateStates()
 	self:SetAimState(math.Approach(self:GetAimState(), aiming and 1 or 0, rate))
 end
 
+function SWEP:SetWeaponAnim(act)
+	self:SendWeaponAnim(act)
+	self:SetNextIdle(CurTime() + self:SequenceDuration())
+end
+
 -- Important for any code that does prediction-y stuff
 function SWEP:PredictionThink()
 	self:UpdateRunning()
 	self:UpdateModes()
 	self:UpdateRecoil()
 	self:UpdateReload()
+
+	if self:GetNextIdle() <= CurTime() then
+		self:SetWeaponAnim(ACT_VM_IDLE)
+	end
 end
 
 function SWEP:Think()

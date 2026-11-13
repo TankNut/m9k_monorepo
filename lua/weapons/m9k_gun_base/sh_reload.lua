@@ -45,7 +45,7 @@ function SWEP:StartReload()
 
 	self:GetOwner():SetAnimation(PLAYER_RELOAD)
 
-	self:SendWeaponAnim(silenced and ACT_VM_RELOAD_SILENCED or ACT_VM_RELOAD)
+	self:SetWeaponAnim(silenced and ACT_VM_RELOAD_SILENCED or ACT_VM_RELOAD)
 	self:SetFinishReload(CurTime() + self:SequenceDuration())
 end
 

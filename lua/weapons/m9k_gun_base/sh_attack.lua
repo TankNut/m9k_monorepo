@@ -9,7 +9,7 @@ function SWEP:FireEffects()
 	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 
 	self:EmitSound(silenced and self.Primary.SilencedSound or self.Primary.Sound)
-	self:SendWeaponAnim(silenced and ACT_VM_PRIMARYATTACK_SILENCED or ACT_VM_PRIMARYATTACK)
+	self:SetWeaponAnim(silenced and ACT_VM_PRIMARYATTACK_SILENCED or ACT_VM_PRIMARYATTACK)
 end
 
 function SWEP:GetDamage()
