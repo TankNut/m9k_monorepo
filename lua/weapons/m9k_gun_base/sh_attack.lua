@@ -90,12 +90,15 @@ function SWEP:GetShootPos()
 	return owner:IsPlayer() and owner:M9K_GetShootPos() or owner:GetShootPos()
 end
 
+function SWEP:ModifyBullet(bullet)
+end
+
 function SWEP:FireWeapon()
 	local dir, spread = self:GetSpread()
 	local damage = self:GetDamage()
 	local owner = self:GetOwner()
 
-	owner:FireBullets({
+	local bullet = {
 		Inflictor = self,
 		Num = self.Primary.NumShots,
 		Src = self:GetShootPos(),
@@ -108,7 +111,10 @@ function SWEP:FireWeapon()
 		Callback = function(attacker, tr, dmg)
 			self:QueueBulletCallback(0, attacker, tr, dmg)
 		end
-	})
+	}
+
+	self:ModifyBullet(bullet)
+	owner:FireBullets(bullet)
 
 	-- Queue-based callback handler to prevent issues with NumShots > 1
 	local callbacks = self.PendingBulletCallbacks
