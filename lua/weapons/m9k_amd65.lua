@@ -1,56 +1,67 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_amd65" -- must be the name of your swep
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_gun_base")
 
-SWEP.Category               = "M9K Assault Rifles"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "AMD 65" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 2
-SWEP.SlotPos                = 24
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = true -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "ar2"
+SWEP.Base = "m9k_gun_base"
 
-SWEP.ViewModelFOV           = 70
-SWEP.ViewModelFlip          = true
-SWEP.ViewModel              = "models/weapons/v_amd_65.mdl"
-SWEP.WorldModel             = "models/weapons/w_amd_65.mdl"
-SWEP.Base                   = "bobs_gun_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = false
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_amd65")
+end
 
-SWEP.Primary.Sound          = "amd65.single"
-SWEP.Primary.RPM            = 750 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 20
-SWEP.Primary.DefaultClip    = 60
-SWEP.Primary.KickUp         = .7 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0.2 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0.4 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = true -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "ar2"
+-- Base info
+SWEP.PrintName = "AMD 65"
+SWEP.Author = "TankNut"
 
-SWEP.Secondary.IronFOV      = 55 -- How much you 'zoom' in. Less is more!
+SWEP.Category = "M9K Redux: Assault Rifles"
 
-SWEP.data                   = {} --The starting firemode
-SWEP.data.ironsights        = 1
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.Primary.NumShots       = 1 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 31 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = .021 -- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = .011 -- Ironsight accuracy, should be the same for shotguns
+SWEP.Slot = 2
 
+-- Models
+SWEP.ViewModelFlip = true
+SWEP.ViewModelFOV = 70
 
-SWEP.SelectiveFire = true
+SWEP.ViewModel = Model("models/weapons/v_amd_65.mdl")
+SWEP.WorldModel = Model("models/weapons/w_amd_65.mdl")
 
-SWEP.SightsPos     = Vector( 3.5, -1, 2.115 )
-SWEP.SightsAng     = Vector( -3.701, 0, 0 )
-SWEP.RunSightsPos  = Vector( -5.198, -9.164, 0 )
-SWEP.RunSightsAng  = Vector( -8.825, -70, 0 )
+SWEP.HoldType = "ar2"
+
+-- Stats
+SWEP.Primary.Ammo = "ar2"
+SWEP.Primary.Automatic = true
+SWEP.Primary.ClipSize = 20
+SWEP.Primary.DefaultClip = 60
+
+SWEP.Primary.RPM = 750 -- Rounds Per Minute
+SWEP.Primary.NumShots = 1 -- Bullets fired per shot
+SWEP.Primary.Damage = 31 -- Damage per single bullet
+
+-- Spread
+SWEP.Primary.SpreadHip = 0.021 -- Spread when hipfiring
+SWEP.Primary.SpreadIronSights = 0.011 -- Spread when fully zoomed in
+
+-- Recoil
+SWEP.Primary.KickUp = 0.7 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.2 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.4 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "amd65.single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.IronFOV = 55 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
+-- Extra modes
+SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( 3.5, -1, 2.115 ) -- Applied while aiming
+SWEP.SightsAng = Vector( -3.701, 0, 0 )
+
+SWEP.RunSightsPos = Vector( -5.198, -9.164, 0 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -8.825, -70, 0 )

@@ -1,138 +1,92 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_an94" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_gun_base")
 
-SWEP.Category               = "M9K Assault Rifles"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "AN-94" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 2
-SWEP.SlotPos                = 25
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = true -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "ar2"
+SWEP.Base = "m9k_gun_base"
 
-
-
-SWEP.ViewModelFOV           = 55
-SWEP.ViewModelFlip          = true
-SWEP.ViewModel              = "models/weapons/v_rif_an_94.mdl"
-SWEP.WorldModel             = "models/weapons/w_rif_an_94.mdl"
-SWEP.ShowWorldModel         = true
-SWEP.Base                   = "bobs_gun_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = false
-
-SWEP.Primary.Sound          = "an94.Single"
-SWEP.Primary.RPM            = 600 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 30
-SWEP.Primary.DefaultClip    = 60
-SWEP.Primary.KickUp         = 0.3 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0.1 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0.3 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = true -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "ar2" -- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a light metal piercing shotgun pellets
-
-SWEP.SelectiveFire          = true
-
-SWEP.Secondary.IronFOV      = 55 -- How much you 'zoom' in. Less is more!
-
-SWEP.data                   = {} --The starting firemode
-SWEP.data.ironsights        = 1
-
-SWEP.Primary.NumShots       = 1 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 31 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = .015 -- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = .005 -- Ironsight accuracy, should be the same for shotguns
-
-SWEP.SightsPos              = Vector( 4.552, 0, 2.95 )
-SWEP.SightsAng              = Vector( 0.93, -0.5, 0 )
-SWEP.RunSightsPos           = Vector( -5.277, -8.584, 2.598 )
-SWEP.RunSightsAng           = Vector( -12.954, -52.088, 0 )
-
-SWEP.Primary.Burst          = false
-
-function SWEP:SelectFireMode()
-    local owner = self:GetOwner()
-
-    if self.Primary.Burst then
-        self.Primary.Burst = false
-        self.NextAction = CurTime() + .5
-        if CLIENT then
-            owner:PrintMessage( HUD_PRINTTALK, "Automatic selected." )
-        end
-        self:EmitSound( "Weapon_AR2.Empty" )
-        self.Primary.NumShots  = 1
-        self.Primary.Sound     = "an94.single"
-        self.Primary.Automatic = true
-        self.Primary.RPM       = 600
-    else
-        self.Primary.Burst = true
-        self.NextAction = CurTime() + .5
-        if CLIENT then
-            owner:PrintMessage( HUD_PRINTTALK, "Burst fire selected." )
-        end
-        self:EmitSound( "Weapon_AR2.Empty" )
-        self.Primary.NumShots  = 2
-        self.Primary.Sound     = "an94.double"
-        self.Primary.Automatic = false
-        self.Primary.RPM       = 300
-    end
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_an94")
 end
 
-SWEP.Primary.PrevShots = SWEP.Primary.NumShots
+-- Base info
+SWEP.PrintName = "AN-94"
+SWEP.Author = "TankNut"
 
-function SWEP:PrimaryAttack()
-    local owner = self:GetOwner()
+SWEP.Category = "M9K Redux: Assault Rifles"
 
-    if self:CanPrimaryAttack() and owner:IsPlayer() then
-        self.ShootThese = self.Primary.NumShots
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-        if self.Primary.Burst then
-            if self.Primary.NumShots > owner:GetActiveWeapon():Clip1() then
-                self.Primary.NumShots = 1
-                self.ShootThese       = 1
-                self.Primary.Sound    = "an94.single"
-            else
-                self.Primary.NumShots = 2
-                self.ShootThese       = 2
-                self.Primary.Sound    = "an94.double"
-            end
-        end
+SWEP.Slot = 2
+SWEP.SlotPos = 25
 
-        if ( not self:IsRunning() or self.CanShootWhileRunning ) and not owner:KeyDown( IN_RELOAD ) then
-            self:ShootBulletInformation()
-            self:TakePrimaryAmmo( self.ShootThese )
-            self:FireAnimation()
+-- Models
+SWEP.ViewModelFlip = true
+SWEP.ViewModelFOV = 55
 
-            local fx = EffectData()
-            fx:SetEntity( self )
-            fx:SetOrigin( owner:M9K_GetShootPos() )
-            fx:SetNormal( owner:GetAimVector() )
-            fx:SetAttachment( self.MuzzleAttachment )
+SWEP.ViewModel = Model("models/weapons/v_rif_an_94.mdl")
+SWEP.WorldModel = Model("models/weapons/w_rif_an_94.mdl")
 
-            owner:SetAnimation( PLAYER_ATTACK1 )
-            owner:MuzzleFlash()
-            self:SetNextPrimaryFire( CurTime() + 1 / (self.Primary.RPM / 60) )
-            self:CheckWeaponsAndAmmo()
-            self.RicochetCoin = (math.random( 1, 4 ))
-            if self.BoltAction then self:BoltBack() end
-        end
-    elseif self:CanPrimaryAttack() and owner:IsNPC() then
-        self:ShootBulletInformation()
-        self:TakePrimaryAmmo( self.ShootThese )
-        self:EmitSound( self.Primary.Sound )
-        owner:SetAnimation( PLAYER_ATTACK1 )
-        owner:MuzzleFlash()
-        self:SetNextPrimaryFire( CurTime() + 1 / (self.Primary.RPM / 60) )
-        self.RicochetCoin = (math.random( 1, 4 ))
-    end
+SWEP.HoldType = "ar2"
+
+-- Stats
+SWEP.Primary.Ammo = "ar2"
+SWEP.Primary.Automatic = true
+SWEP.Primary.ClipSize = 20
+SWEP.Primary.DefaultClip = 60
+
+SWEP.Primary.RPM = 600 -- Rounds Per Minute
+SWEP.Primary.NumShots = 1 -- Bullets fired per shot
+SWEP.Primary.Damage = 31 -- Damage per single bullet
+
+-- Spread
+SWEP.Primary.SpreadHip = 0.015 -- Spread when hipfiring
+SWEP.Primary.SpreadIronSights = 0.005 -- Spread when fully zoomed in
+
+-- Recoil
+SWEP.Primary.KickUp = 0.3 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.1 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.3 -- Maximum side recoil (koolaid)
+
+-- Aiming
+SWEP.Secondary.IronFOV = 55 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
+-- Extra modes
+SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( 4.552, 0, 2.95 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 0.93, -0.5, 0 )
+
+SWEP.RunSightsPos = Vector( -5.277, -8.584, 2.598 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -12.954, -52.088, 0 )
+
+function SWEP:ToggleFiremode()
+	local automatic = not self:GetAutomatic()
+	self:SetAutomatic(automatic)
+
+	if SERVER then
+		self:GetOwner():PrintMessage(HUD_PRINTTALK, automatic and "Automatic selected." or "Burst selected.")
+	end
+
+	self:SetNextAction(CurTime() + 0.2)
+	self:EmitSound("Weapon_AR2.Empty")
+end
+
+function SWEP:TakeAmmo()
+	self:TakePrimaryAmmo(self:GetAutomatic() and 1 or 2)
+end
+
+function SWEP:FireEffects()
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
+
+	self:EmitSound(self:GetAutomatic() and "an94.Single" or "an94.Double")
+	self:SetWeaponAnim(ACT_VM_PRIMARYATTACK)
+end
+
+function SWEP:ModifyBullet(bullet)
+	bullet.Num = self:GetAutomatic() and 1 or 2
 end

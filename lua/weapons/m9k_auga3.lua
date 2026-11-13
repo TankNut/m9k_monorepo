@@ -1,69 +1,72 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_auga3" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_scoped_base")
 
-SWEP.Category                 = "M9K Assault Rifles"
-SWEP.Author                   = ""
-SWEP.Contact                  = ""
-SWEP.Purpose                  = ""
-SWEP.Instructions             = ""
-SWEP.MuzzleAttachment         = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment     = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName                = "Steyr AUG A3" -- Weapon name (Shown on HUD)
-SWEP.Slot                     = 2
-SWEP.SlotPos                  = 26
-SWEP.DrawAmmo                 = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair            = true
-SWEP.Weight                   = 30
-SWEP.AutoSwitchTo             = true
-SWEP.AutoSwitchFrom           = true
-SWEP.XHair                    = true -- Used for returning crosshair after scope. Must be the same as DrawCrosshair
-SWEP.BoltAction               = false
-SWEP.HoldType                 = "smg"
+SWEP.Base = "m9k_scoped_base"
 
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_auga3")
+end
 
+-- Base info
+SWEP.PrintName = "Steyr AUG A3"
+SWEP.Author = "TankNut"
 
-SWEP.ViewModelFOV             = 70
-SWEP.ViewModelFlip            = true
-SWEP.ViewModel                = "models/weapons/v_auga3sa.mdl"
-SWEP.WorldModel               = "models/weapons/w_auga3.mdl"
-SWEP.Base                     = "bobs_scoped_base"
-SWEP.Spawnable                = true
-SWEP.AdminSpawnable           = true
+SWEP.Category = "M9K Redux: Assault Rifles"
 
-SWEP.Primary.Sound            = "aug_a3.Single"
-SWEP.Primary.RPM              = 700 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize         = 30
-SWEP.Primary.DefaultClip      = 60
-SWEP.Primary.KickUp           = .4 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown         = .4 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal   = .5 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic        = true -- Automatic/Semi Auto
-SWEP.Primary.Ammo             = "ar2" -- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a light metal piercing shotgun pellets
-SWEP.SelectiveFire            = true
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.Secondary.ScopeZoom      = 4
-SWEP.Secondary.UseACOG        = false -- Choose one scope type
-SWEP.Secondary.UseMilDot      = false
-SWEP.Secondary.UseSVD         = false
-SWEP.Secondary.UseParabolic   = false
-SWEP.Secondary.UseElcan       = false
-SWEP.Secondary.UseGreenDuplex = false
-SWEP.Secondary.UseAimpoint    = true
-SWEP.Secondary.UseMatador     = false
+SWEP.Slot = 2
 
-SWEP.data                     = {}
-SWEP.data.ironsights          = 1
-SWEP.ScopeScale               = 0.5
-SWEP.ReticleScale             = 0.6
+-- Models
+SWEP.ViewModelFlip = true
+SWEP.ViewModelFOV = 70
 
-SWEP.Primary.NumShots         = 1 --how many bullets to shoot per trigger pull
-SWEP.Primary.Damage           = 22 --base damage per bullet
-SWEP.Primary.SpreadHip           = .025 --define from-the-hip accuracy 1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights     = .02 -- ironsight accuracy, should be the same for shotguns
+SWEP.ViewModel = Model("models/weapons/v_auga3sa.mdl")
+SWEP.WorldModel = Model("models/weapons/w_auga3.mdl")
 
+SWEP.HoldType = "smg"
 
-SWEP.SightsPos                = Vector( 2.275, -2.9708, 0.5303 )
-SWEP.SightsAng                = Vector( 0, 0, 0 )
-SWEP.RunSightsPos             = Vector( -3.0328, 0, 1.888 )
-SWEP.RunSightsAng             = Vector( -24.2146, -36.522, 10 )
+-- Stats
+SWEP.Primary.Ammo = "ar2"
+SWEP.Primary.Automatic = true
+SWEP.Primary.ClipSize = 30
+SWEP.Primary.DefaultClip = 60
+
+SWEP.Primary.RPM = 700 -- Rounds Per Minute
+SWEP.Primary.NumShots = 1 -- Bullets fired per shot
+SWEP.Primary.Damage = 22 -- Damage per single bullet
+
+-- Spread
+SWEP.Primary.SpreadHip = 0.025 -- Spread when hipfiring
+SWEP.Primary.SpreadIronSights = 0.02 -- Spread when fully zoomed in
+
+-- Recoil
+SWEP.Primary.KickUp = 0.4 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.4 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.5 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "aug_a3.Single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.ScopeZoom = 4 -- Overrides SWEP.Secondary.IronFOV when set
+SWEP.Secondary.UseAimpoint = true
+
+SWEP.ScopeScale = 0.5
+SWEP.ReticleScale = 0.6
+
+-- Extra modes
+SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+SWEP.BoltAction = false -- Forces unscoping between shots
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( 2.275, -2.9708, 0.5303 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 0, 0, 0 )
+
+SWEP.RunSightsPos = Vector( -3.0328, 0, 1.888 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -24.2146, -36.522, 10 )

@@ -1,57 +1,67 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_ares_shrike" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_gun_base")
 
-SWEP.Category               = "M9K Machine Guns"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "Ares Shrike" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 3
-SWEP.SlotPos                = 39
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = true -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "ar2"
+SWEP.Base = "m9k_gun_base"
 
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_ares_shrike")
+end
 
+-- Base info
+SWEP.PrintName = "Ares Shrike"
+SWEP.Author = "TankNut"
 
-SWEP.ViewModelFOV           = 65
-SWEP.ViewModelFlip          = false
-SWEP.ViewModel              = "models/weapons/v_ares_shrike01.mdl"
-SWEP.WorldModel             = "models/weapons/w_ares_shrike.mdl"
-SWEP.Base                   = "bobs_gun_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = false
+SWEP.Category = "M9K Redux: Machine Guns"
 
-SWEP.DeployDelay = 1
-SWEP.Primary.Sound          = "Weapon_shrk.Single"
-SWEP.Primary.RPM            = 650 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 200
-SWEP.Primary.DefaultClip    = 400
-SWEP.Primary.KickUp         = 0.6 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0.4 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0.5 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = true -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "ar2" -- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a light metal piercing shotgun pellets
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.Secondary.IronFOV      = 65 -- How much you 'zoom' in. Less is more!
+SWEP.Slot = 3
 
-SWEP.data                   = {} --The starting firemode
-SWEP.data.ironsights        = 1
+-- Models
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 65
 
-SWEP.Primary.NumShots       = 1 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 30 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = .03 -- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = .02 -- Ironsight accuracy, should be the same for shotguns
+SWEP.ViewModel = Model("models/weapons/v_ares_shrike01.mdl")
+SWEP.WorldModel = Model("models/weapons/w_ares_shrike.mdl")
 
-SWEP.SightsPos              = Vector( -3.804, 0, 0.495 )
-SWEP.SightsAng              = Vector( 0.119, -0.019, 0 )
-SWEP.RunSightsPos           = Vector( 1.639, -3.444, 0 )
-SWEP.RunSightsAng           = Vector( -7.46, 47.048, 0 )
+SWEP.HoldType = "ar2"
+
+-- Stats
+SWEP.Primary.Ammo = "ar2"
+SWEP.Primary.Automatic = true
+SWEP.Primary.ClipSize = 200
+SWEP.Primary.DefaultClip = 400
+
+SWEP.Primary.RPM = 650 -- Rounds Per Minute
+SWEP.Primary.NumShots = 1 -- Bullets fired per shot
+SWEP.Primary.Damage = 30 -- Damage per single bullet
+
+-- Spread
+SWEP.Primary.SpreadHip = 0.03 -- Spread when hipfiring
+SWEP.Primary.SpreadIronSights = 0.02 -- Spread when fully zoomed in
+
+-- Recoil
+SWEP.Primary.KickUp = 0.6 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.4 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.5 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "Weapon_shrk.Single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.IronFOV = 65 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
+-- Extra modes
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( -3.804, 0, 0.495 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 0.119, -0.019, 0 )
+
+SWEP.RunSightsPos = Vector( 1.639, -3.444, 0 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -7.46, 47.048, 0 )

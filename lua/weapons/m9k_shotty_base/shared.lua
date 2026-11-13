@@ -34,11 +34,6 @@ SWEP.RecoilKickSpeed = 40
 
 SWEP.Primary.Sound = "WepRem870.Single"
 
-SWEP.Secondary.Ammo = ""
-SWEP.Secondary.Automatic = false
-SWEP.Secondary.ClipSize = 0
-SWEP.Secondary.DefaultClip = 0
-
 SWEP.Secondary.IronFOV = 60 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
 SWEP.Secondary.ScopeZoom = 0 -- Overrides SWEP.Secondary.IronFOV when set
 
