@@ -11,8 +11,10 @@ SWEP.m_WeaponDeploySpeed = 10
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
 
-SWEP.Spawnable = true
+-- Base info
+SWEP.Spawnable = false
 
+-- Models
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 65
 
@@ -21,6 +23,7 @@ SWEP.WorldModel = Model("models/weapons/w_tct_famas.mdl")
 
 SWEP.HoldType = "ar2"
 
+-- Stats
 SWEP.Primary.Ammo = "ar2"
 SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 30
@@ -30,9 +33,11 @@ SWEP.Primary.RPM = 950
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Damage = 29
 
+-- Spread
 SWEP.Primary.SpreadHip = 0.025
 SWEP.Primary.SpreadIronSights = 0.015
 
+-- Recoil
 SWEP.Primary.KickUp = 0.4 -- Maximum up recoil (rise)
 SWEP.Primary.KickDown = 0.4 -- Maximum down recoil (skeet)
 SWEP.Primary.KickHorizontal = 0.4 -- Maximum side recoil (koolaid)
@@ -40,28 +45,35 @@ SWEP.Primary.KickHorizontal = 0.4 -- Maximum side recoil (koolaid)
 SWEP.KickUpMultiplier = 2
 SWEP.RecoilKickSpeed = 40
 
-SWEP.Primary.Sound = "Weapon_FAMTC.Single"
+-- Sounds
+SWEP.Primary.Sound = ""
 
+-- Do not use
 SWEP.Secondary.Ammo = ""
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = 0
 SWEP.Secondary.DefaultClip = 0
 
+-- Aiming
 SWEP.Secondary.IronFOV = 55 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
 SWEP.Secondary.ScopeZoom = 0 -- Overrides SWEP.Secondary.IronFOV when set
 
-SWEP.SelectiveFire = true
-SWEP.CanBeSilenced = false
-
-SWEP.IronSightTime = 0.15
+SWEP.IronSightTime = 0.15 -- Time to transition from hipfire to sights
 SWEP.ViewModelCorrection = 0 -- How much correction to apply to SWEP.ViewModelFOV when zooming, range [0-1]
 
-SWEP.CustomIdlePos = Vector(0, 0, -1)
+-- Extra modes
+SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0)
 SWEP.CustomIdleAng = Vector(0, 0, 0)
-SWEP.SightsPos = Vector(-1, 0, 0)
+
+SWEP.SightsPos = Vector(0, 0, 0)
 SWEP.SightsAng = Vector(0, 0, 0)
-SWEP.RunSightsPos = Vector(1, -3.6, -1)
-SWEP.RunSightsAng = Vector(-10, 44, -18)
+
+SWEP.RunSightsPos = Vector(0, 0, 0)
+SWEP.RunSightsAng = Vector(0, 0, 0)
 
 include("sh_attack.lua")
 include("sh_bullet.lua")
@@ -78,6 +90,8 @@ function SWEP:Initialize()
 	if CLIENT then
 		self.BaseViewModelFOV = self.ViewModelFOV
 	end
+
+	self.PendingBulletCallbacks = {}
 end
 
 function SWEP:SetupDataTables()
@@ -106,7 +120,7 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	self:SetFinishReload(0) -- Cancel any in-progress reloads
+	self:AbortReload() -- Cancel any in-progress reloads
 
 	return true
 end

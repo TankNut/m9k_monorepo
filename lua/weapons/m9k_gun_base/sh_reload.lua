@@ -74,6 +74,11 @@ function SWEP:UpdateReload()
 	end
 end
 
+-- Hard abort, used for SWEP:Holster()
+function SWEP:AbortReload()
+	self:SetFinishReload(0)
+end
+
 -- Since this has input checks, use StartReload if you want to reload from code
 function SWEP:Reload()
 	local ply = self:GetOwner()
