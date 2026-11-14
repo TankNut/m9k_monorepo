@@ -25,7 +25,7 @@ SWEP.ViewModelFOV = 70
 SWEP.ViewModel = Model("models/weapons/f_dmgf_co1911.mdl")
 SWEP.WorldModel = Model("models/weapons/s_dmgf_co1911.mdl")
 
-SWEP.HoldType = "ar2"
+SWEP.HoldType = "pistol"
 
 -- Stats
 SWEP.Primary.Ammo = "pistol"
@@ -53,7 +53,7 @@ SWEP.Primary.Sound = "Dmgfok_co1911.Single" -- Sound played when firing
 SWEP.Secondary.IronFOV = 55 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
 
 -- Extra modes
-SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
 
 -- Viewmodel offsets

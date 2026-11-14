@@ -25,7 +25,7 @@ SWEP.ViewModelFOV = 65
 SWEP.ViewModel = Model("models/weapons/v_pist_python.mdl")
 SWEP.WorldModel = Model("models/weapons/w_colt_python.mdl")
 
-SWEP.HoldType = "ar2"
+SWEP.HoldType = "revolver"
 
 -- Stats
 SWEP.Primary.Ammo = "357"
@@ -53,7 +53,7 @@ SWEP.Primary.Sound = "Weapon_ColtPython.Single" -- Sound played when firing
 SWEP.Secondary.IronFOV = 65 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
 
 -- Extra modes
-SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
 
 -- Viewmodel offsets

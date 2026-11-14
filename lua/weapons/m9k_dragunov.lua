@@ -1,68 +1,72 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_dragunov" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_scoped_base")
 
-SWEP.Category                 = "M9K Sniper Rifles"
-SWEP.Author                   = ""
-SWEP.Contact                  = ""
-SWEP.Purpose                  = ""
-SWEP.Instructions             = ""
-SWEP.MuzzleAttachment         = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment     = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName                = "SVD Dragunov" -- Weapon name (Shown on HUD)
-SWEP.Slot                     = 4
-SWEP.SlotPos                  = 41
-SWEP.DrawAmmo                 = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair            = false
-SWEP.XHair                    = false -- Used for returning crosshair after scope. Must be the same as DrawCrosshair
-SWEP.Weight                   = 50
-SWEP.AutoSwitchTo             = true
-SWEP.AutoSwitchFrom           = true
-SWEP.BoltAction               = false
-SWEP.HoldType                 = "rpg"
+SWEP.Base = "m9k_scoped_base"
 
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_dragunov")
+end
 
+-- Base info
+SWEP.PrintName = "SVD Dragunov"
+SWEP.Author = "TankNut"
 
-SWEP.ViewModelFOV             = 65
-SWEP.ViewModelFlip            = false
-SWEP.ViewModel                = "models/weapons/v_dragunov02.mdl"
-SWEP.WorldModel               = "models/weapons/w_svd_dragunov.mdl"
-SWEP.Base                     = "bobs_scoped_base"
-SWEP.Spawnable                = true
-SWEP.AdminSpawnable           = true
+SWEP.Category = "M9K Redux: Sniper Rifles"
 
-SWEP.Primary.Sound            = "Weapon_svd01.Single"
-SWEP.Primary.RPM              = 400 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize         = 10
-SWEP.Primary.DefaultClip      = 60
-SWEP.Primary.KickUp           = 1 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown         = .6 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal   = .5 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic        = false -- Automatic/Semi Auto
-SWEP.Primary.Ammo             = "SniperPenetratedRound" -- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a light metal piercing shotgun pellets
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.Secondary.ScopeZoom      = 9
-SWEP.Secondary.UseACOG        = false -- Choose one scope type
-SWEP.Secondary.UseMilDot      = false
-SWEP.Secondary.UseSVD         = true
-SWEP.Secondary.UseParabolic   = false
-SWEP.Secondary.UseElcan       = false
-SWEP.Secondary.UseGreenDuplex = false
-SWEP.Secondary.UseAimpoint    = false
-SWEP.Secondary.UseMatador     = false
+SWEP.Slot = 3
 
-SWEP.data                     = {}
-SWEP.data.ironsights          = 1
-SWEP.ScopeScale               = 0.7
-SWEP.ReticleScale             = 0.6
+-- Models
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 65
 
-SWEP.Primary.NumShots         = 1 --how many bullets to shoot per trigger pull
-SWEP.Primary.Damage           = 90 --base damage per bullet
-SWEP.Primary.SpreadHip           = .01 --define from-the-hip accuracy 1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights     = .00012 -- ironsight accuracy, should be the same for shotguns
+SWEP.ViewModel = Model("models/weapons/v_dragunov02.mdl")
+SWEP.WorldModel = Model("models/weapons/w_svd_dragunov.mdl")
 
+SWEP.HoldType = "rpg"
 
-SWEP.SightsPos                = Vector( -1.241, -1.476, 0 )
-SWEP.SightsAng                = Vector( 0, 0, 0 )
-SWEP.RunSightsPos             = Vector( 3.934, -5.41, 0 )
-SWEP.RunSightsAng             = Vector( -11.476, 35, 0 )
+-- Stats
+SWEP.Primary.Ammo = "SniperPenetratedRound"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = 10
+SWEP.Primary.DefaultClip = 60
+
+SWEP.Primary.RPM = 400 -- Rounds Per Minute
+SWEP.Primary.NumShots = 1 -- Bullets fired per shot
+SWEP.Primary.Damage = 90 -- Damage per single bullet
+
+-- Spread
+SWEP.Primary.SpreadHip = 0.01 -- Spread when hipfiring
+SWEP.Primary.SpreadIronSights = 0.00012 -- Spread when fully zoomed in
+
+-- Recoil
+SWEP.Primary.KickUp = 1 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.6 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.5 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "Weapon_svd01.Single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.ScopeZoom = 9 -- Overrides SWEP.Secondary.IronFOV when set
+SWEP.Secondary.UseSVD = true
+
+SWEP.ScopeScale = 0.7
+SWEP.ReticleScale = 0.6
+
+-- Extra modes
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+SWEP.BoltAction = false -- Forces unscoping between shots
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( -1.241, -1.476, 0 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 0, 0, 0 )
+
+SWEP.RunSightsPos = Vector( 3.934, -5.41, 0 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -11.476, 35, 0 )

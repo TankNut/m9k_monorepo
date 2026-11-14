@@ -53,7 +53,7 @@ SWEP.Primary.Sound = "Weapon_P19.Single" -- Sound played when firing
 SWEP.Secondary.IronFOV = 60 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
 
 -- Extra modes
-SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
 
 -- Viewmodel offsets
