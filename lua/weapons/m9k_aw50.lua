@@ -59,6 +59,7 @@ SWEP.ReticleScale = 0.6
 -- Extra modes
 SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+SWEP.BoltAction = true -- Forces unscoping between shots
 
 -- Viewmodel offsets
 SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
