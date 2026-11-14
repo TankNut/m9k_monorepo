@@ -12,6 +12,12 @@ function SWEP:ToggleFiremode()
 	self:EmitSound("Weapon_AR2.Empty")
 end
 
+function SWEP:ToggleSilencer()
+	local silenced = not self:GetSilencer()
+	self:SetSilencer(silenced)
+	self:SetNextAction(self:SetWeaponAnim(silenced and ACT_VM_ATTACH_SILENCER or ACT_VM_DETACH_SILENCER))
+end
+
 function SWEP:UpdateModes()
 	if self:GetNextAction() > CurTime() then return end
 
@@ -23,7 +29,7 @@ function SWEP:UpdateModes()
 		end
 
 		if self.CanBeSilenced and ply:KeyPressed(IN_ATTACK2) then
-			print("self:ToggleSilencer()")
+			self:ToggleSilencer()
 		end
 	end
 end

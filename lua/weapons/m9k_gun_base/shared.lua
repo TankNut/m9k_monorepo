@@ -183,7 +183,9 @@ end
 function SWEP:ShouldAimState()
 	if self:GetRunning() then return false end
 
-	return self:GetOwner():KeyDown(IN_ATTACK2)
+	local ply = self:GetOwner()
+
+	return ply:KeyDown(IN_ATTACK2) and not ply:KeyDown(IN_USE)
 end
 
 function SWEP:UpdateStates()
@@ -213,7 +215,7 @@ function SWEP:PredictionThink()
 	self:UpdateReload()
 
 	if self:GetNextIdle() <= CurTime() then
-		self:SetWeaponAnim(ACT_VM_IDLE)
+		self:SetWeaponAnim(self:GetSilencer() and ACT_VM_IDLE_SILENCED or ACT_VM_IDLE)
 	end
 end
 
