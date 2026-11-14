@@ -59,8 +59,7 @@ end
 
 function SWEP:PrimaryAttack()
 	if self:IsReloading() and not self:GetLastReload() then
-		self:SetWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH)
-		self:SetFinishReload(CurTime() + self:SequenceDuration())
+		self:SetFinishReload(self:SetWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH))
 		self:SetLastReload(true)
 
 		return
@@ -74,8 +73,7 @@ function SWEP:StartReload()
 
 	self:GetOwner():SetAnimation(PLAYER_RELOAD)
 
-	self:SetWeaponAnim(ACT_SHOTGUN_RELOAD_START)
-	self:SetFinishReload(CurTime() + self:SequenceDuration())
+	self:SetFinishReload(self:SetWeaponAnim(ACT_SHOTGUN_RELOAD_START))
 	self:SetFirstReload(true)
 end
 
@@ -97,8 +95,7 @@ function SWEP:FinishReload()
 	if not last then
 		local should = (self:Clip1() < self:GetMaxClip1()) and self:Ammo1() > 0
 
-		self:SetWeaponAnim(should and ACT_VM_RELOAD or ACT_SHOTGUN_RELOAD_FINISH)
-		self:SetFinishReload(CurTime() + self:SequenceDuration())
+		self:SetFinishReload(self:SetWeaponAnim(should and ACT_VM_RELOAD or ACT_SHOTGUN_RELOAD_FINISH))
 
 		if not should then
 			self:SetLastReload(true)

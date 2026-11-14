@@ -114,8 +114,7 @@ function SWEP:Deploy()
 	self:SetHoldType(self.HoldType)
 	self:SetActiveRecoil(angle_zero)
 
-	self:SetWeaponAnim(self:GetSilencer() and ACT_VM_DRAW_SILENCED or ACT_VM_DRAW)
-	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
+	self:SetNextPrimaryFire(self:SetWeaponAnim(self:GetSilencer() and ACT_VM_DRAW_SILENCED or ACT_VM_DRAW))
 
 	return true
 end
@@ -199,7 +198,11 @@ end
 
 function SWEP:SetWeaponAnim(act)
 	self:SendWeaponAnim(act)
-	self:SetNextIdle(CurTime() + self:SequenceDuration())
+
+	local finish = CurTime() + self:SequenceDuration()
+	self:SetNextIdle(finish)
+
+	return finish
 end
 
 -- Important for any code that does prediction-y stuff

@@ -44,9 +44,7 @@ function SWEP:StartReload()
 	local silenced = self:GetSilencer()
 
 	self:GetOwner():SetAnimation(PLAYER_RELOAD)
-
-	self:SetWeaponAnim(silenced and ACT_VM_RELOAD_SILENCED or ACT_VM_RELOAD)
-	self:SetFinishReload(CurTime() + self:SequenceDuration())
+	self:SetFinishReload(self:SetWeaponAnim(silenced and ACT_VM_RELOAD_SILENCED or ACT_VM_RELOAD))
 end
 
 function SWEP:FinishReload()
@@ -56,7 +54,6 @@ function SWEP:FinishReload()
 	local amount = math.min(self:GetMaxClip1() - clip, self:Ammo1())
 
 	self:GetOwner():RemoveAmmo(amount, self:GetPrimaryAmmoType())
-
 	self:SetClip1(clip + amount)
 end
 
