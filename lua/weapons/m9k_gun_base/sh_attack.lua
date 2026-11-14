@@ -67,9 +67,13 @@ local function getSpread(gun, dir, aimcone)
 	return right
 end
 
+function SWEP:GetAimCone()
+	return Lerp(self:GetAimState(), self.Primary.SpreadHip, self.Primary.SpreadIronSights)
+end
+
 function SWEP:GetSpread()
 	local owner = self:GetOwner()
-	local aimcone = Lerp(self:GetAimState(), self.Primary.SpreadHip, self.Primary.SpreadIronSights)
+	local aimcone = self:GetAimCone()
 
 	if owner:IsNPC() then
 		-- NPC's handle spread through WEAPON:GetNPCBulletSpread()
