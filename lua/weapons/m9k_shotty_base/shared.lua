@@ -39,6 +39,7 @@ SWEP.Secondary.ScopeZoom = 0 -- Overrides SWEP.Secondary.IronFOV when set
 
 SWEP.SelectiveFire = false
 SWEP.CanBeSilenced = false
+SWEP.ShellTime = 0 -- Overrides the time it takes to reload a shell
 
 SWEP.IronSightTime = 0.15
 SWEP.ViewModelCorrection = 0 -- How much correction to apply to SWEP.ViewModelFOV when zooming, range [0-1]
@@ -55,6 +56,16 @@ function SWEP:SetupDataTables()
 
 	self:NetworkVar("Bool", "FirstReload")
 	self:NetworkVar("Bool", "LastReload")
+end
+
+function SWEP:SetWeaponAnim(act)
+	local finish = BaseClass.SetWeaponAnim(self, act)
+
+	if act == ACT_VM_RELOAD and self.ShellTime != 0 then
+		return CurTime() + self.ShellTime
+	end
+
+	return finish
 end
 
 function SWEP:PrimaryAttack()

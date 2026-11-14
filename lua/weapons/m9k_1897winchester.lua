@@ -55,6 +55,7 @@ SWEP.Secondary.IronFOV = 60 -- This sucks, it'll work but SWEP.Secondary.ScopeZo
 -- Extra modes
 SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+SWEP.ShellTime = 0.5 -- Overrides the time it takes to reload a shell
 
 -- Viewmodel offsets
 SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
