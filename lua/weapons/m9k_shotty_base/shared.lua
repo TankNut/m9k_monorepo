@@ -69,7 +69,7 @@ function SWEP:SetWeaponAnim(act)
 end
 
 function SWEP:PrimaryAttack()
-	if self:IsReloading() and not self:GetLastReload() then
+	if self:IsReloading() and not self:GetLastReload() and self:Clip1() > 0 then
 		self:SetFinishReload(self:SetWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH))
 		self:SetLastReload(true)
 
