@@ -1,52 +1,68 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_striker12" -- must be the name of your swep
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_shotty_base")
 
-SWEP.Category               = "M9K Shotguns"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "Striker 12" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 3
-SWEP.SlotPos                = 28
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = true -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "ar2"
+SWEP.Base = "m9k_shotty_base"
 
-SWEP.ViewModelFOV           = 70
-SWEP.ViewModelFlip          = true
-SWEP.ViewModel              = "models/weapons/v_striker_12g.mdl"
-SWEP.WorldModel             = "models/weapons/w_striker_12g.mdl"
-SWEP.Base                   = "bobs_shotty_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_striker12")
+end
 
-SWEP.Primary.Sound          = "ShotStriker12.Single"
-SWEP.Primary.RPM            = 365 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 12
-SWEP.Primary.DefaultClip    = 36 -- Default number of bullets in a clip
-SWEP.Primary.KickUp         = 4 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0.5 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = .6 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = true -- Automatic/Semi Auto
-SWEP.Primary.Ammo           = "buckshot"
+-- Base info
+SWEP.PrintName = "Striker 12"
+SWEP.Author = "TankNut"
 
-SWEP.Secondary.IronFOV      = 60 -- How much you 'zoom' in. Less is more!
+SWEP.Category = "M9K Redux: Shotguns"
 
-SWEP.ShellTime              = .3
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.Primary.NumShots       = 6 -- How many bullets to shoot per trigger pull, AKA pellets
-SWEP.Primary.Damage         = 8 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = .04 -- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = .04 -- Ironsight accuracy, should be the same for shotguns
+SWEP.Slot = 3
 
-SWEP.SightsPos              = Vector( 3.805, -1.045, 1.805 )
-SWEP.SightsAng              = Vector( 2.502, 3.431, 0 )
-SWEP.RunSightsPos           = Vector( -3.237, -6.376, 1.167 )
-SWEP.RunSightsAng           = Vector( -8.391, -63.543, 0 )
+-- Models
+SWEP.ViewModelFlip = true
+SWEP.ViewModelFOV = 70
 
+SWEP.ViewModel = Model("models/weapons/v_striker_12g.mdl")
+SWEP.WorldModel = Model("models/weapons/w_striker_12g.mdl")
+
+SWEP.HoldType = "shotgun"
+
+-- Stats
+SWEP.Primary.Ammo = "buckshot"
+SWEP.Primary.Automatic = true
+SWEP.Primary.ClipSize = 12
+SWEP.Primary.DefaultClip = 36
+
+SWEP.Primary.RPM = 365 -- Rounds Per Minute
+SWEP.Primary.NumShots = 6 -- Bullets fired per shot
+SWEP.Primary.Damage = 8 -- Damage per single bullet
+
+-- Spread
+SWEP.Primary.SpreadHip = 0.04 -- Spread when hipfiring
+SWEP.Primary.SpreadIronSights = 0.04 -- Spread when fully zoomed in
+
+-- Recoil
+SWEP.Primary.KickUp = 4 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.5 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.6 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "ShotStriker12.Single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.IronFOV = 60 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
+-- Extra modes
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+SWEP.ShellTime = 0.3 -- Overrides the time it takes to reload a shell
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( 3.805, -1.045, 1.805 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 2.502, 3.431, 0 )
+
+SWEP.RunSightsPos = Vector( -3.237, -6.376, 1.167 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -8.391, -63.543, 0 )

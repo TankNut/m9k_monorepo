@@ -1,58 +1,67 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_vector" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_gun_base")
 
-SWEP.Category                = "M9K Submachine Guns"
-SWEP.Author                = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions                = ""
-SWEP.MuzzleAttachment            = "1"     -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment            = "2"     -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName                = "KRISS Vector"        -- Weapon name (Shown on HUD)
-SWEP.Slot                = 2
-SWEP.SlotPos                = 58
-SWEP.DrawAmmo                = true        -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair            = true        -- set false if you want no crosshair
-SWEP.Weight                = 30
-SWEP.AutoSwitchTo            = true
-SWEP.AutoSwitchFrom            = true
-SWEP.HoldType                 = "smg"
+SWEP.Base = "m9k_gun_base"
 
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_vector")
+end
 
+-- Base info
+SWEP.PrintName = "KRISS Vector"
+SWEP.Author = "TankNut"
 
-SWEP.ViewModelFOV            = 70
-SWEP.ViewModelFlip            = true
-SWEP.ViewModel                = "models/weapons/v_kriss_svs.mdl"
-SWEP.WorldModel                = "models/weapons/w_kriss_vector.mdl"
-SWEP.Base                = "bobs_gun_base"
-SWEP.Spawnable                = true
-SWEP.AdminSpawnable            = true
-SWEP.FiresUnderwater = false
+SWEP.Category = "M9K Redux: Submachine Guns"
 
-SWEP.Primary.Sound            = "kriss_vector.Single"
-SWEP.Primary.RPM            = 1000            -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize            = 30
-SWEP.Primary.DefaultClip        = 60
-SWEP.Primary.KickUp                = 0.2        -- Maximum up recoil (rise)
-SWEP.Primary.KickDown            = 0.1        -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal        = 0.3        -- Maximum up recoil (stock)
-SWEP.Primary.Automatic            = true        -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo            = "smg1"            -- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a light metal piercing shotgun pellets
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.SelectiveFire        = true
+SWEP.Slot = 2
 
-SWEP.Secondary.IronFOV            = 50        -- How much you 'zoom' in. Less is more!
+-- Models
+SWEP.ViewModelFlip = true
+SWEP.ViewModelFOV = 70
 
-SWEP.data                 = {}                --The starting firemode
-SWEP.data.ironsights            = 1
+SWEP.ViewModel = Model("models/weapons/v_kriss_svs.mdl")
+SWEP.WorldModel = Model("models/weapons/w_kriss_vector.mdl")
 
-SWEP.Primary.NumShots    = 1        -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage        = 18    -- Base damage per bullet
-SWEP.Primary.SpreadHip        = .026    -- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights = .014 -- Ironsight accuracy, should be the same for shotguns
+SWEP.HoldType = "smg"
 
-SWEP.SightsPos = Vector(3.943, -0.129, 1.677)
+-- Stats
+SWEP.Primary.Ammo = "smg1"
+SWEP.Primary.Automatic = true
+SWEP.Primary.ClipSize = 30
+SWEP.Primary.DefaultClip = 60
+
+SWEP.Primary.RPM = 1000 -- Rounds Per Minute
+SWEP.Primary.NumShots = 1 -- Bullets fired per shot
+SWEP.Primary.Damage = 18 -- Damage per single bullet
+
+-- Spread
+SWEP.Primary.SpreadHip = 0.026 -- Spread when hipfiring
+SWEP.Primary.SpreadIronSights = 0.014 -- Spread when fully zoomed in
+
+-- Recoil
+SWEP.Primary.KickUp = 0.2 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.1 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.3 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "kriss_vector.Single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.IronFOV = 50 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
+-- Extra modes
+SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector(3.943, -0.129, 1.677) -- Applied while aiming
 SWEP.SightsAng = Vector(-1.922, 0.481, 0)
-SWEP.RunSightsPos = Vector(-3.701, -6.064, -0.551)
+
+SWEP.RunSightsPos = Vector(-3.701, -6.064, -0.551) -- Applied while sprinting
 SWEP.RunSightsAng = Vector(-4.685, -62.559, 9.093)
