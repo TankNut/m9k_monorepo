@@ -8,7 +8,7 @@ if CLIENT then
 end
 
 -- Base info
-SWEP.PrintName = "Raging Bull"
+SWEP.PrintName = "Remington 1858"
 SWEP.Author = "TankNut"
 
 SWEP.Category = "M9K Redux: Pistols"
