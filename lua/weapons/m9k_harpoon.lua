@@ -1,155 +1,150 @@
-SWEP.Category               = "M9K Specialties"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "Harpoon" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 0
-SWEP.SlotPos                = 23
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = true -- set false if you want no crosshair
-SWEP.Weight                 = 1
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "grenade"
+AddCSLuaFile()
 
-
-
-SWEP.ViewModelFOV           = 40
-SWEP.ViewModelFlip          = false
-SWEP.ViewModel              = "models/weapons/v_pistol.mdl"
-SWEP.WorldModel             = "models/weapons/w_harpooner.mdl"
-SWEP.ShowViewModel          = false
-SWEP.Base                   = "bobs_gun_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = false
-SWEP.ShowWorldModel         = true
-
-SWEP.Primary.Sound          = ""
-SWEP.Primary.RPM            = 40 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 1
-SWEP.Primary.DefaultClip    = 2
-SWEP.Primary.KickUp         = 0 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = false -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "Harpoon"
-SWEP.Primary.Round = "m9k_thrown_harpoon"
-
-SWEP.Secondary.IronFOV      = 60 -- How much you 'zoom' in. Less is more!
-
-SWEP.Primary.NumShots       = 0 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 0 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = 0 -- Define from-the-hip accuracy (1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = 0 -- Ironsight accuracy, should be the same for shotguns
---none of this matters for IEDs and other ent-tossing sweps
-
-SWEP.VElements = {
-    ["javelin"] = {
-        type = "Model",
-        model = "models/props_junk/harpoon002a.mdl",
-        bone = "ValveBiped.square",
-        rel = "",
-        pos = Vector( -2, -7, 12 ),
-        angle = Angle( 90, 10, 10 ),
-        size = Vector( 0.9, 0.5, 0.5 ),
-        color = Color( 255, 255, 255, 255 ),
-    }
-}
-
-function SWEP:Deploy()
-    self:SetHoldType( self.HoldType )
-    self:SendWeaponAnim( ACT_VM_DRAW )
-    self:SetNextPrimaryFire( CurTime() + 0.8 )
-    return true
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_harpoon")
 end
 
-if SERVER then
-    function SWEP:FireRocket()
-        local pos = self:GetOwner():M9K_GetShootPos()
-        local rocket = ents.Create( self.Primary.Round )
-        rocket:SetAngles( self:GetOwner():GetAimVector():Angle() )
-        rocket:SetPos( pos )
-        rocket:SetOwner( self:GetOwner() )
-        rocket:Spawn()
-        rocket:Activate()
+SWEP.BounceWeaponIcon = false
+SWEP.DrawWeaponInfoBox = false
 
-        local phys = rocket:GetPhysicsObject()
-        phys:SetVelocity( self:GetOwner():GetAimVector() * 2000 )
+SWEP.PrintName = "Harpoon"
+SWEP.Author = "TankNut"
 
-        if not self:GetOwner():IsNPC() then
-            local anglo = Angle( 3, 5, 0 )
-            self:GetOwner():ViewPunch( anglo )
-        end
-    end
+SWEP.Spawnable = true
+
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 40
+SWEP.ViewModel = Model("models/weapons/v_pistol.mdl")
+SWEP.WorldModel = Model("models/weapons/w_harpooner.mdl")
+
+SWEP.Primary.Ammo = "Harpoon"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = 1
+
+SWEP.Secondary.Ammo = ""
+SWEP.Secondary.Automatic = false
+SWEP.Secondary.ClipSize = -1
+SWEP.Secondary.DefaultClip = 0
+
+function SWEP:Initialize()
+	self:SetHoldType("grenade")
+end
+
+function SWEP:Deploy()
+	self:SetHoldType("grenade")
+
+	return true
+end
+
+function SWEP:OnReloaded()
+	self:SetWeaponHoldType(self:GetHoldType())
 end
 
 function SWEP:PrimaryAttack()
-    if not self:CanPrimaryAttack() then return end
-    if self:GetNextPrimaryFire() > CurTime() then return end
+	local ply = self:GetOwner()
+	local dir = ply:GetAimVector()
+	local pos = ply:M9K_GetShootPos()
 
-    local shootPos = self:GetOwner():M9K_GetShootPos()
-    local tracedata = {
-        start = shootPos,
-        endpos = shootPos + self:GetForward() * 40,
-        filter = self:GetOwner()
-    }
-    local trace = util.TraceLine( tracedata )
-    if trace.Hit then return end
+	local tr = util.TraceLine({
+		start = pos,
+		endpos = pos + dir * 40,
+		filter = ply
+	})
 
-    if SERVER then
-        self:FireRocket()
-    end
+	if tr.Hit then
+		return
+	end
 
-    self:GetOwner():SetAnimation( PLAYER_ATTACK1 )
-    self:EmitSound( "Weapon_Knife.Slash" )
-    self:TakePrimaryAmmo( 1 )
-    self:SendWeaponAnim( ACT_VM_HITCENTER )
+	self:TakePrimaryAmmo(1)
 
-    if SERVER then
-        if self:GetOwner():GetAmmoCount( self.Primary.Ammo ) == 0 then
-            self:GetOwner():StripWeapon( self:GetClass() )
-        else
-            self:Reload()
-        end
-    end
+	ply:SetAnimation(PLAYER_ATTACK1)
 
-    self:SetNextPrimaryFire( CurTime() + 1 / ( self.Primary.RPM / 60 ) )
-end
+	if SERVER then
+		local ent = ents.Create("m9k_thrown_harpoon")
+		ent:SetAngles(dir:Angle())
+		ent:SetPos(pos)
+		ent:SetOwner(ply)
+		ent:Spawn()
+		ent:Activate()
 
-function SWEP:Reload()
-    if not IsValid( self:GetOwner() ) then return end
+		local phys = ent:GetPhysicsObject()
+		phys:SetVelocity(dir * 2000)
 
-    if self:GetOwner():IsNPC() then
-        self:DefaultReload( ACT_VM_RELOAD )
-        return
-    end
+		if self:Ammo1() == 0 then
+			timer.Simple(0, function()
+				if not ply:IsPlayer() or not self:IsValid() then return end
 
-    self:DefaultReload( ACT_VM_DRAW )
+				ply:StripWeapon(self:GetClass())
+			end)
+		end
+	end
 
-    if not self:GetOwner():IsNPC() then
-        if self:GetOwner():GetViewModel() == nil then
-            self.ResetSights = CurTime() + 3
-        else
-            self.ResetSights = CurTime() + self:GetOwner():GetViewModel():SequenceDuration()
-        end
-    end
+	if game.SinglePlayer() or (CLIENT and IsFirstTimePredicted()) then
+		ply:ViewPunch(Angle(3, 5, 0))
+	end
+
+	self:SetNextPrimaryFire(CurTime() + 1.5)
 end
 
 function SWEP:SecondaryAttack()
-    return false
 end
 
-function SWEP:ThinkCustom()
+function SWEP:Reload()
 end
 
-function SWEP:PreDrawViewModel( vm )
-    vm:SetMaterial( "engine/occlusionproxy" )
-end
+if CLIENT then
+	local null = Material("null")
+	local harpoon
 
-function SWEP:PostDrawViewModel( vm )
-    vm:SetMaterial( "" )
+	local function createHarpoon()
+		harpoon = ClientsideModel("models/props_junk/harpoon002a.mdl")
+		harpoon:SetNoDraw(true)
+
+		local matrix = Matrix()
+		matrix:Scale(Vector(0.9, 0.5, 0.5))
+
+		harpoon:EnableMatrix("RenderMultiply", matrix)
+	end
+
+	function SWEP:PreDrawViewModel(vm, _, ply, flags)
+		render.MaterialOverride(null)
+	end
+
+	function SWEP:PostDrawViewModel(vm, _, ply, flags)
+		render.MaterialOverride(nil)
+
+		if self:GetNextPrimaryFire() > CurTime() then
+			return
+		end
+
+		if not IsValid(harpoon) then
+			createHarpoon()
+		end
+
+		local bone = vm:LookupBone("ValveBiped.square")
+
+		if not bone then
+			return
+		end
+
+		local matrix = vm:GetBoneMatrix(bone)
+		matrix:SetScale(Vector(1, 1, 1))
+
+		matrix:Translate(Vector(-2, 7, 12))
+		matrix:Rotate(Angle(-90, 10, 10))
+
+		harpoon:SetPos(matrix:GetTranslation())
+		harpoon:SetAngles(matrix:GetAngles())
+
+		harpoon:DrawModel()
+	end
+
+	function SWEP:DrawWorldModel(flags)
+		if self:GetNextPrimaryFire() > CurTime() then
+			return
+		end
+
+		self:DrawModel(flags)
+	end
 end
