@@ -1,102 +1,81 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_rpg7" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_gun_base")
 
-SWEP.Category               = "M9K Specialties"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "RPG-7" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 4
-SWEP.SlotPos                = 34
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = false -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "rpg"
+SWEP.Base = "m9k_gun_base"
 
-SWEP.ViewModelFOV           = 70
-SWEP.ViewModelFlip          = false
-SWEP.ViewModel              = "models/weapons/v_RL7.mdl"
-SWEP.WorldModel             = "models/weapons/w_rl7.mdl"
-SWEP.Base                   = "bobs_gun_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = true
-
-SWEP.Primary.Sound          = ""
-SWEP.Primary.RPM            = 30 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 1
-SWEP.Primary.DefaultClip    = 4
-SWEP.Primary.KickUp         = 3 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 3 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 1 -- Maximum up recoil (stock)
-SWEP.RecoilKickSpeed = 40
-SWEP.Primary.Automatic      = false -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "RPG_Round"
--- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a metal piercing shotgun slug
-
-SWEP.Primary.Round = "m9k_gdcwa_rpg_heat"
-
-SWEP.Secondary.IronFOV      = 40 -- How much you 'zoom' in. Less is more!
-
-SWEP.Primary.NumShots       = 0 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 0 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = 0 -- Define from-the-hip accuracy (1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = 0 -- Ironsight accuracy, should be the same for shotguns
---none of this matters for IEDs and other ent-tossing sweps
-
-SWEP.SightsPos              = Vector( -3.7384, -5.7481, -0.2713 )
-SWEP.SightsAng              = Vector( 1.1426, 0.0675, 0 )
-SWEP.RunSightsPos           = Vector( 2.4946, -1.5644, 1.699 )
-SWEP.RunSightsAng           = Vector( -20.1104, 35.1164, -12.959 )
-
---and now to the nasty parts of this swep...
-
-function SWEP:PrimaryAttack()
-    local owner = self:GetOwner()
-    if not IsValid( owner ) then return end
-
-    if self:CanPrimaryAttack() and ( not self:IsRunning() or self.CanShootWhileRunning ) then
-        self:FireRocket()
-        self:EmitSound( "RPGF.single" )
-        self:TakePrimaryAmmo( 1 )
-        self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-        owner:SetAnimation( PLAYER_ATTACK1 )
-        owner:MuzzleFlash()
-        self:SetNextPrimaryFire( CurTime() + 1 / (self.Primary.RPM / 60) )
-    end
-
-    timer.Simple( 0.2, function()
-        if not IsValid( self ) then return end
-        self:CheckWeaponsAndAmmo()
-    end )
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_rpg7")
 end
 
-function SWEP:FireRocket()
-    local owner = self:GetOwner()
+-- Base info
+SWEP.PrintName = "RPG-7"
+SWEP.Author = "TankNut"
 
-    local aim = owner:GetAimVector()
-    local side = aim:Cross( Vector( 0, 0, 1 ) )
-    local up = side:Cross( aim )
-    local pos = owner:M9K_GetShootPos() + side * 6 + up * -5
+SWEP.Category = "M9K Redux: Specialties"
 
-    if SERVER then
-        local rocket = ents.Create( self.Primary.Round )
-        if not rocket:IsValid() then return false end
-        rocket:SetAngles( aim:Angle() + Angle( 0, 0, 0 ) )
-        rocket:SetPos( pos )
-        rocket:SetOwner( owner )
-        rocket:Spawn()
-        rocket:Activate()
-    end
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-    self:AddRecoil()
+SWEP.Slot = 4
+
+-- Models
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 70
+
+SWEP.ViewModel = Model("models/weapons/v_RL7.mdl")
+SWEP.WorldModel = Model("models/weapons/w_rl7.mdl")
+
+SWEP.HoldType = "rpg"
+
+-- Stats
+SWEP.Primary.Ammo = "RPG_Round"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = 1
+SWEP.Primary.DefaultClip = 4
+
+SWEP.Primary.RPM = 60 -- Rounds Per Minute
+
+-- Recoil
+SWEP.Primary.KickUp = 3 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 3 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 1 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "RPGF.single" -- Sound played when firing
+
+-- Extra modes
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( -3.7384, -5.7481, -0.2713 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 1.1426, 0.0675, 0 )
+
+SWEP.RunSightsPos = Vector( 2.4946, -1.5644, 1.699 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -20.1104, 35.1164, -12.959 )
+
+function SWEP:SetWeaponAnim(act)
+	if act == ACT_VM_IDLE then return end
+
+	return BaseClass.SetWeaponAnim(self, act)
 end
 
-function SWEP:SecondaryAttack()
+function SWEP:FireWeapon()
+	if SERVER then
+		local owner = self:GetOwner()
+		local ang = owner:GetAimVector():Angle()
+
+		local ent = ents.Create("m9k_gdcwa_rpg_heat")
+
+		ent:SetPos(LocalToWorld(Vector(0, -6, -5), angle_zero, self:GetShootPos(), ang))
+		ent:SetAngles(ang)
+		ent:SetOwner(owner)
+		ent:Spawn()
+		ent:Activate()
+	end
+
+	self:AddRecoil()
 end

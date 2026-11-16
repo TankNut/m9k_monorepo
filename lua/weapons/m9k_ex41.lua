@@ -1,99 +1,85 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_ex41" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_shotty_base")
 
-SWEP.Category               = "M9K Specialties"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "EX41" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 4
-SWEP.SlotPos                = 28
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = true -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "shotgun"
+SWEP.Base = "m9k_shotty_base"
 
-
-
-SWEP.ViewModelFOV           = 70
-SWEP.ViewModelFlip          = false
-SWEP.ViewModel              = "models/weapons/v_ex41.mdl"
-SWEP.WorldModel             = "models/weapons/w_ex41.mdl"
-SWEP.ShowWorldModel         = true
-
-SWEP.Base                   = "bobs_shotty_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = false
-
-SWEP.Primary.Sound          = "40mmGrenade.Single"
-SWEP.Primary.RPM            = 45 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 3
-SWEP.Primary.DefaultClip    = 6
-SWEP.Primary.KickUp         = 1 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0.3 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0.3 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = false -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "40mmGrenade"
-
-SWEP.Secondary.IronFOV      = 70 -- How much you 'zoom' in. Less is more!
-SWEP.Primary.Round = "m9k_launched_ex41"
-SWEP.data                   = {} --The starting firemode
-SWEP.data.ironsights        = 1
-
-SWEP.ShellTime              = .5
-
-SWEP.Primary.NumShots       = 1 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 30 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = .025 -- Define from-the-hip accuracy (1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = .015 -- Ironsight accuracy, should be the same for shotguns
-
-SWEP.SightsPos              = Vector( -2.85, -3, 1.3 )
-SWEP.SightsAng              = Vector( 2, -1.1, 0 )
-SWEP.RunSightsPos           = Vector( 3.279, -5.574, 0 )
-SWEP.RunSightsAng           = Vector( -1.721, 49.917, 0 )
-
-function SWEP:PrimaryAttack()
-    if not self:CanPrimaryAttack() then return end
-    local owner = self:GetOwner()
-    if not IsValid( owner ) then return end
-
-    if ( not self:IsRunning() or self.CanShootWhileRunning ) and not owner:KeyDown( IN_RELOAD ) then
-        self:FireRocket()
-        self:EmitSound( self.Primary.Sound )
-        self:TakePrimaryAmmo( 1 )
-        self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-        owner:SetAnimation( PLAYER_ATTACK1 )
-        owner:MuzzleFlash()
-        self:SetNextPrimaryFire( CurTime() + 1 / (self.Primary.RPM / 60) )
-    else
-        self:Reload()
-    end
-    self:CheckWeaponsAndAmmo()
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_ex41")
 end
 
-function SWEP:FireRocket()
-    local owner = self:GetOwner()
+-- Base info
+SWEP.PrintName = "EX41"
+SWEP.Author = "TankNut"
 
-    local aim = owner:GetAimVector()
-    local side = aim:Cross( Vector( 0, 0, 1 ) )
-    local up = side:Cross( aim )
-    local pos = owner:M9K_GetShootPos() + side * 6 + up * -5
+SWEP.Category = "M9K Redux: Specialties"
 
-    if SERVER then
-        local rocket = ents.Create( self.Primary.Round )
-        if not rocket:IsValid() then return false end
-        rocket:SetAngles( aim:Angle() + Angle( 90, 0, 0 ) )
-        rocket:SetPos( pos )
-        rocket:SetOwner( owner )
-        rocket:Spawn()
-        rocket:Activate()
-    end
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-    self:AddRecoil()
+SWEP.Slot = 4
+
+-- Models
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 70
+
+SWEP.ViewModel = Model("models/weapons/v_ex41.mdl")
+SWEP.WorldModel = Model("models/weapons/w_ex41.mdl")
+
+SWEP.HoldType = "shotgun"
+
+-- Stats
+SWEP.Primary.Ammo = "40mmGrenade"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = 3
+SWEP.Primary.DefaultClip = 6
+
+SWEP.Primary.RPM = 45 -- Rounds Per Minute
+
+-- Recoil
+SWEP.Primary.KickUp = 1 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0.3 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0.3 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "40mmGrenade.Single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.IronFOV = 60 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
+-- Extra modes
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+SWEP.ShellTime = 0.5 -- Overrides the time it takes to reload a shell
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( -2.85, -3, 1.3 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 2, -1.1, 0 )
+
+SWEP.RunSightsPos = Vector( 3.279, -5.574, 0 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -1.721, 49.917, 0 )
+
+function SWEP:SetWeaponAnim(act)
+	if act == ACT_VM_IDLE then return end
+
+	return BaseClass.SetWeaponAnim(self, act)
+end
+
+function SWEP:FireWeapon()
+	if SERVER then
+		local owner = self:GetOwner()
+		local ang = owner:GetAimVector():Angle()
+
+		local ent = ents.Create("m9k_launched_ex41")
+
+		ent:SetPos(LocalToWorld(Vector(0, -6, -5), Angle(1, 0, 0), self:GetShootPos(), ang))
+		ent:SetAngles(ang + Angle(90, 0, 0))
+		ent:SetOwner(owner)
+		ent:Spawn()
+		ent:Activate()
+	end
+
+	self:AddRecoil()
 end

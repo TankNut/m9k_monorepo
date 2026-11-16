@@ -1,107 +1,83 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_matador" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_scoped_base")
 
-SWEP.Category               = "M9K Specialties"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "Matador" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 4
-SWEP.SlotPos                = 33
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = false -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "rpg"
+SWEP.Base = "m9k_scoped_base"
 
-SWEP.ViewModelFOV           = 70
-SWEP.ViewModelFlip          = false
-SWEP.ViewModel              = "models/weapons/v_MAT.mdl"
-SWEP.WorldModel             = "models/weapons/w_GDCW_MATADOR_RL.mdl"
-SWEP.Base                   = "bobs_scoped_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = true
-
-SWEP.Primary.Sound          = ""
-SWEP.Primary.RPM            = 60 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 1
-SWEP.Primary.DefaultClip    = 4
-SWEP.Primary.KickUp         = 2 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 1 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 1 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = false -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "RPG_Round"
--- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a metal piercing shotgun slug
-
-SWEP.Primary.Round = "m9k_gdcwa_matador_90mm"
-
-SWEP.Secondary.IronFOV      = 0 -- How much you 'zoom' in. Less is more!
-SWEP.Secondary.UseMatador   = true
-SWEP.Secondary.ScopeZoom    = 4
-SWEP.Boltaction             = false
-
-SWEP.Primary.NumShots       = 0 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 0 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = 0 -- Define from-the-hip accuracy (1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = 0 -- Ironsight accuracy, should be the same for shotguns
---none of this matters for IEDs and other ent-tossing sweps
-
-SWEP.ScopeScale             = 1
-SWEP.ReticleScale           = 0.5
-SWEP.SightsPos              = Vector( -3.0556, -8.6664, 1.4751 )
-SWEP.SightsAng              = Vector( 0, 0, 0 )
-SWEP.RunSightsPos           = Vector( 2.4946, -1.5644, 1.699 )
-SWEP.RunSightsAng           = Vector( -20.1104, 35.1164, -12.959 )
-
---and now to the nasty parts of this swep...
-
-function SWEP:PrimaryAttack()
-    local owner = self:GetOwner()
-    if not IsValid( owner ) then return end
-
-    if self:CanPrimaryAttack() and ( not self:IsRunning() or self.CanShootWhileRunning ) then
-        self:FireRocket()
-        self:EmitSound( "MATADORF.single" )
-        self:TakePrimaryAmmo( 1 )
-        self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-        owner:SetAnimation( PLAYER_ATTACK1 )
-        owner:MuzzleFlash()
-        self:SetNextPrimaryFire( CurTime() + 1 / ( self.Primary.RPM / 60 ) )
-    end
-
-    timer.Simple( 0.2, function()
-        if not IsValid( self ) then return end
-        self:CheckWeaponsAndAmmo()
-    end )
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_matador")
 end
 
-function SWEP:FireRocket()
-    local owner = self:GetOwner()
+-- Base info
+SWEP.PrintName = "Matador"
+SWEP.Author = "TankNut"
 
-    local aim = owner:GetAimVector()
-    local side = aim:Cross( Vector( 0, 0, 1 ) )
-    local up = side:Cross( aim )
-    local pos = owner:M9K_GetShootPos() + side * 9 + up * -1
+SWEP.Category = "M9K Redux: Specialties"
 
-    if SERVER then
-        local rocket = ents.Create( self.Primary.Round )
-        if not rocket:IsValid() then return false end
-        rocket:SetAngles( aim:Angle() + Angle( 90, 0, 0 ) )
-        rocket:SetPos( pos )
-        rocket:SetOwner( owner )
-        rocket:Spawn()
-        rocket:Activate()
-        util.ScreenShake( owner:M9K_GetShootPos(), 1000, 10, 0.3, 500 )
-    end
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-    self:AddRecoil()
-end
+SWEP.Slot = 4
 
-function SWEP:SecondaryAttack()
+-- Models
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 70
+
+SWEP.ViewModel = Model("models/weapons/v_MAT.mdl")
+SWEP.WorldModel = Model("models/weapons/w_GDCW_MATADOR_RL.mdl")
+
+SWEP.HoldType = "rpg"
+
+-- Stats
+SWEP.Primary.Ammo = "RPG_Round"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = 1
+SWEP.Primary.DefaultClip = 4
+
+SWEP.Primary.RPM = 60 -- Rounds Per Minute
+
+-- Recoil
+SWEP.Primary.KickUp = 2 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 1 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 1 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "MATADORF.single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.ScopeZoom = 4 -- Overrides SWEP.Secondary.IronFOV when set
+SWEP.Secondary.UseMatador = true
+
+SWEP.ScopeScale = 1
+SWEP.ReticleScale = 0.5
+
+-- Extra modes
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+SWEP.BoltAction = false -- Forces unscoping between shots
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector( -3.0556, -8.6664, 1.4751 ) -- Applied while aiming
+SWEP.SightsAng = Vector( 0, 0, 0 )
+
+SWEP.RunSightsPos = Vector( 2.4946, -1.5644, 1.699 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -20.1104, 35.1164, -12.959 )
+
+function SWEP:FireWeapon()
+	if SERVER then
+		local owner = self:GetOwner()
+		local ang = owner:GetAimVector():Angle()
+
+		local ent = ents.Create("m9k_gdcwa_matador_90mm")
+
+		ent:SetPos(LocalToWorld(Vector(0, -9, 1), angle_zero, self:GetShootPos(), ang))
+		ent:SetAngles(ang + Angle(90, 0, 0))
+		ent:SetOwner(owner)
+		ent:Spawn()
+		ent:Activate()
+	end
+
+	self:AddRecoil()
 end
