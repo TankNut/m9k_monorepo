@@ -3,8 +3,6 @@ DEFINE_BASECLASS("m9k_gun_base")
 
 SWEP.Base = "m9k_gun_base"
 
-SWEP.Spawnable = true
-
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 70
 

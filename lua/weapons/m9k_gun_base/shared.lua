@@ -11,9 +11,6 @@ SWEP.m_WeaponDeploySpeed = 10
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
 
--- Base info
-SWEP.Spawnable = false
-
 -- Models
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 65
