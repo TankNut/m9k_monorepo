@@ -23,7 +23,7 @@ SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 70
 
 SWEP.ViewModel = Model("models/weapons/v_M202.mdl")
-SWEP.WorldModel = Model("models/weapons/w_rocket_launcher.mdl")
+SWEP.WorldModel = Model("models/weapons/w_m202.mdl")
 
 SWEP.HoldType = "rpg"
 
