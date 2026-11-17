@@ -37,10 +37,6 @@ function SWEP:Deploy()
 	return true
 end
 
-function SWEP:OnReloaded()
-	self:SetWeaponHoldType(self:GetHoldType())
-end
-
 function SWEP:PrimaryAttack()
 	local ply = self:GetOwner()
 	local dir = ply:GetAimVector()
@@ -91,6 +87,10 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
+end
+
+function SWEP:OnReloaded()
+	self:SetWeaponHoldType(self:GetHoldType())
 end
 
 if CLIENT then
