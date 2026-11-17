@@ -47,7 +47,7 @@ SWEP.Primary.KickDown = 0.4 -- Maximum down recoil (skeet)
 SWEP.Primary.KickHorizontal = 0.6 -- Maximum side recoil (koolaid)
 
 -- Sounds
-SWEP.Primary.Sound = "Weapon_l85.Single" -- Sound played when firing
+SWEP.Primary.Sound = "Dmgfok_M16A4.Single" -- Sound played when firing
 
 -- Aiming
 SWEP.Secondary.ScopeZoom = 4 -- Overrides SWEP.Secondary.IronFOV when set
