@@ -134,15 +134,24 @@ function SWEP:BulletRicochet(iteration, attacker, tr, damage)
 
 	if tr.MatType != MAT_METAL then
 		-- None of this other code makes sense so I'm just leaving it
-		EmitSound("m9k_ricochet_miss", tr.HitPos, 0)
+		if IsFirstTimePredicted() then
+			EmitSound("m9k_ricochet_miss", tr.HitPos, 0)
+		end
 
 		return false
 	end
 
 	local dot = tr.HitNormal:Dot(tr.Normal * -1)
 
+	local deflection = Vector(
+		util.SharedRandom("m9k_ricochet_angle", -1, 1, 1),
+		util.SharedRandom("m9k_ricochet_angle", -1, 1, 2),
+		util.SharedRandom("m9k_ricochet_angle", -1, 1, 3)
+	)
+	deflection:Normalize()
+
 	-- No minimum angle for deflection? Alright
-	local dir = ((2 * tr.HitNormal * dot) + tr.Normal) + VectorRand() * 0.05
+	local dir = ((2 * tr.HitNormal * dot) + tr.Normal) + deflection * 0.05
 	damage = damage * 0.5
 
 	attacker:FireBullets({
