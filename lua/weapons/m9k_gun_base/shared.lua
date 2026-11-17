@@ -73,6 +73,8 @@ SWEP.SightsAng = Vector(0, 0, 0)
 SWEP.RunSightsPos = Vector(0, 0, 0)
 SWEP.RunSightsAng = Vector(0, 0, 0)
 
+SWEP.CSMuzzleFlashes = true
+
 include("sh_attack.lua")
 include("sh_bullet.lua")
 include("sh_modes.lua")
