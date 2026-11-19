@@ -10,7 +10,10 @@ SWEP.DrawWeaponInfoBox = false
 SWEP.PrintName = "Harpoon"
 SWEP.Author = "TankNut"
 
+SWEP.Category = "M9K Redux: Specialties"
+
 SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 40
