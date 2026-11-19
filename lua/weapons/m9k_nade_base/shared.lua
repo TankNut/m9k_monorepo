@@ -7,8 +7,8 @@ SWEP.Spawnable = false
 
 SWEP.ViewModelFlip = true
 SWEP.ViewModelFOV = 70
-SWEP.ViewModel = Model("models/weapons/v_eq_FragGrenade.mdl")
-SWEP.WorldModel = Model("models/weapons/w_eq_FragGrenade.mdl")
+SWEP.ViewModel = Model("models/weapons/v_invisible_nade.mdl")
+SWEP.WorldModel = Model("models/weapons/w_grenade.mdl")
 
 SWEP.Primary.Ammo = "Grenade"
 SWEP.Primary.Automatic = false
@@ -22,21 +22,11 @@ SWEP.Secondary.DefaultClip = 0
 
 SWEP.GrenadeClass = "m9k_thrown_m61"
 
-SWEP.FakeWorldModel = {
-	Model = "models/weapons/w_m61_fraggynade.mdl",
-	Bone = "ValveBiped.Bip01_R_Hand",
-	Pos = Vector(3.611, 1.751, -2.003),
-	Ang = Angle(-143.148, 5.699, 0),
-	Scale = Vector(1.348, 1.348, 1.348)
-}
+AddCSLuaFile("cl_sck.lua")
 
-SWEP.FakeViewModel = {
-	Model = "models/weapons/w_m61_fraggynade.mdl",
-	Bone = "v_weapon.Flashbang_Parent",
-	Pos = Vector( 0.194, -1.316, 0.54 ),
-	Ang = Angle( 95.096, -12.285, 97.221 ),
-	Scale = Vector( 1, 1, 1 )
-}
+if CLIENT then
+	include("cl_sck.lua")
+end
 
 function SWEP:Initialize()
 	self:SetHoldType("normal")
@@ -154,25 +144,14 @@ end
 
 function SWEP:OnReloaded()
 	self:SetWeaponHoldType(self:GetHoldType())
+
+	if CLIENT then
+		self:RemoveFakeEntities()
+	end
 end
 
-if CLIENT then
-	local function createEntity(tab)
-		local ent = ClientsideModel(tab.Model)
-		ent:SetNoDraw(true)
-
-		local matrix = Matrix()
-		matrix:Scale(tab.Scale)
-
-		ent:EnableMatrix("RenderMultiply", matrix)
-
-		return ent
-	end
-
-	function SWEP:CreateViewModel()
-		--self.FakeViewEntity = createEntity(self.FakeViewModel)
-	end
-
-	function SWEP:CreateWorldModel()
+function SWEP:OnRemove()
+	if CLIENT then
+		self:RemoveFakeEntities()
 	end
 end
