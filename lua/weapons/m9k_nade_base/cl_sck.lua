@@ -42,7 +42,14 @@ function SWEP:RenderFakeEntity(parent, ent, tab, flags)
 	ent:SetPos(pos)
 	ent:SetAngles(ang)
 
+	if tab.Material then
+		render.MaterialOverride(tab.Material)
+	end
+
+	ent:SetupBones()
 	ent:DrawModel(flags)
+
+	render.MaterialOverride(nil)
 end
 
 function SWEP:BuildBoneCache(vm)
