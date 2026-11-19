@@ -108,18 +108,20 @@ function SWEP:FinishReload()
 	self:SetHoldType("normal")
 	self:SetReloadTime(0)
 
-	self:SendWeaponAnim(ACT_VM_DRAW)
-	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
-	self:SetNextSecondaryFire(CurTime() + self:SequenceDuration())
+	if self:Ammo1() == 0 then
+		if SERVER then
+			local ply = self:GetOwner()
 
-	if SERVER and self:Ammo1() == 0 then
-		local ply = self:GetOwner()
+			timer.Simple(0, function()
+				if not ply:IsPlayer() or not self:IsValid() then return end
 
-		timer.Simple(0, function()
-			if not ply:IsPlayer() or not self:IsValid() then return end
-
-			ply:StripWeapon(self:GetClass())
-		end)
+				ply:StripWeapon(self:GetClass())
+			end)
+		end
+	else
+		self:SendWeaponAnim(ACT_VM_DRAW)
+		self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
+		self:SetNextSecondaryFire(CurTime() + self:SequenceDuration())
 	end
 end
 
