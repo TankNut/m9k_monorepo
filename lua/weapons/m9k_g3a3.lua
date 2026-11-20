@@ -57,11 +57,11 @@ SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
 
 -- Viewmodel offsets
-SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
-SWEP.CustomIdleAng = Vector(0, 0, 0)
+SWEP.CustomIdlePos = Vector(1, 0, -1) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, -1, 0)
 
-SWEP.SightsPos = Vector( -2.419, -2.069, 1.498 ) -- Applied while aiming
-SWEP.SightsAng = Vector( -0.109, -0.281, 0 )
+SWEP.SightsPos = Vector(0, -1, 0.2) -- Applied while aiming
+SWEP.SightsAng = Vector()
 
 SWEP.RunSightsPos = Vector( 3.384, -3.044, -0.264 ) -- Applied while sprinting
 SWEP.RunSightsAng = Vector( -7.402, 43.334, 0 )

@@ -62,11 +62,11 @@ SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
 SWEP.BoltAction = false -- Forces unscoping between shots
 
 -- Viewmodel offsets
-SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdlePos = Vector(0, 0, -1) -- Applied when the weapon is idle
 SWEP.CustomIdleAng = Vector(0, 0, 0)
 
-SWEP.SightsPos = Vector (2.275, -2.9708, 0.5303) -- Applied while aiming
-SWEP.SightsAng = Vector( 0, 0, 0 )
+SWEP.SightsPos = Vector(2.275, -2.9708, 0.5303) -- Applied while aiming
+SWEP.SightsAng = Vector(0, 0, 0)
 
 SWEP.RunSightsPos = Vector (-3.0328, 0, 1.888) -- Applied while sprinting
 SWEP.RunSightsAng = Vector (-24.2146, -36.522, 10)

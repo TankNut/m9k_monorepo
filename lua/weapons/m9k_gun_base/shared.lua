@@ -57,7 +57,7 @@ SWEP.Secondary.IronFOV = 55 -- This sucks, it'll work but SWEP.Secondary.ScopeZo
 SWEP.Secondary.ScopeZoom = 0 -- Overrides SWEP.Secondary.IronFOV when set
 
 SWEP.IronSightTime = 0.15 -- Time to transition from hipfire to sights
-SWEP.ViewModelCorrection = 0 -- How much correction to apply to SWEP.ViewModelFOV when zooming, range [0-1]
+SWEP.ViewModelCorrection = 0.5 -- How much correction to apply to SWEP.ViewModelFOV when zooming, range [0-1]
 
 -- Extra modes
 SWEP.SelectiveFire = true -- If set, E+R switches between semi and full-auto

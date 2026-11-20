@@ -51,8 +51,8 @@ SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
 SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
 SWEP.CustomIdleAng = Vector(0, 0, 0)
 
-SWEP.SightsPos = Vector( -4.7089, 1.2661, -0.3572 ) -- Applied while aiming
-SWEP.SightsAng = Vector( -0.1801, 0.985, 0 )
+SWEP.SightsPos = Vector(-1, 0, 0) -- Applied while aiming
+SWEP.SightsAng = Vector(0, 1, 0)
 
 SWEP.RunSightsPos = Vector( 7.3256, 6.8881, -4.8875 ) -- Applied while sprinting
 SWEP.RunSightsAng = Vector( -15.596, 53.0059, -11.98 )

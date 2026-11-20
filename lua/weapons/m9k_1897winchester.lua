@@ -61,8 +61,8 @@ SWEP.ShellTime = 0.5 -- Overrides the time it takes to reload a shell
 SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
 SWEP.CustomIdleAng = Vector(0, 0, 0)
 
-SWEP.SightsPos = Vector( 2.809, 0, 1.48 ) -- Applied while aiming
-SWEP.SightsAng = Vector( 0, 0, 0 )
+SWEP.SightsPos = Vector(1, 1, 1) -- Applied while aiming
+SWEP.SightsAng = Vector(0, 0, 0)
 
 SWEP.RunSightsPos = Vector( -3.116, -3.935, 0.492 ) -- Applied while sprinting
 SWEP.RunSightsAng = Vector( -19.894, -47.624, 10.902 )

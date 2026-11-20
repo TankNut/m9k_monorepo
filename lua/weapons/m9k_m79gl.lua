@@ -52,11 +52,11 @@ SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
 SWEP.ShellTime = 0.5 -- Overrides the time it takes to reload a shell
 
 -- Viewmodel offsets
-SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdlePos = Vector(0, 0, -1) -- Applied when the weapon is idle
 SWEP.CustomIdleAng = Vector(0, 0, 0)
 
-SWEP.SightsPos = Vector( -4.633, -7.651, 2.108 ) -- Applied while aiming
-SWEP.SightsAng = Vector( 1.294, 0.15, 0 )
+SWEP.SightsPos = Vector(-2, 2, 1) -- Applied while aiming
+SWEP.SightsAng = Vector()
 
 SWEP.RunSightsPos = Vector( 3.279, -5.574, 0 ) -- Applied while sprinting
 SWEP.RunSightsAng = Vector( -1.721, 49.917, 0 )
