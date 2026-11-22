@@ -89,6 +89,8 @@ function SWEP:Initialize()
 
 	if CLIENT then
 		self.BaseViewModelFOV = self.ViewModelFOV
+		self.CL_AimState = 0
+		self.CL_RunState = 0
 	end
 
 	self.PendingBulletCallbacks = {}
@@ -225,14 +227,6 @@ function SWEP:Think()
 	end
 
 	self:UpdateStates()
-
-	if CLIENT then
-		-- TODO: CanShootWhileRunning lerps to 0.25 instead, figure out how to implement this
-		local state = Lerp(self:GetAimState(), 1, 0.25)
-
-		self.SwayScale = state
-		self.BobScale = state
-	end
 end
 
 function SWEP:OnReloaded()
