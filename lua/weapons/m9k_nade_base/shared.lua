@@ -99,9 +99,19 @@ function SWEP:Throw()
 		dir:Normalize()
 
 		local phys = ent:GetPhysicsObject()
+		local vel, ang
+
+		if self:GetRoll() then
+			vel = 2000
+			ang = Vector(200, math.random(-600, 600), 0)
+		else
+			vel = 5000
+			ang = Vector(600, math.random(-1200, 1200), 0)
+		end
 
 		phys:SetVelocity(ply:GetVelocity())
-		phys:ApplyForceCenter(dir * (self:GetRoll() and 2000 or 5500))
+		phys:ApplyForceCenter(dir * vel)
+		phys:AddAngleVelocity(ang)
 	end
 
 	self:SetThrowTime(0)
