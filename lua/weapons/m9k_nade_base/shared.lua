@@ -1,5 +1,7 @@
 AddCSLuaFile()
 
+SWEP.m_WeaponDeploySpeed = 10
+
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
 
@@ -41,6 +43,8 @@ end
 
 function SWEP:Deploy()
 	self:SetHoldType("normal")
+	self:SendWeaponAnim(ACT_VM_DRAW)
+	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
 
 	return true
 end
