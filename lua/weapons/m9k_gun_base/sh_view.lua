@@ -20,28 +20,12 @@ function SWEP:GetZoom()
 		zoom = 90 / self.Secondary.IronFOV
 	end
 
-	local state = CLIENT and self.CL_AimState or self:GetAimState()
+	local state = self:GetAimState()
 
 	return simpleSplineRemapValClamped(state, 0, 1, 1, zoom)
 end
 
-function SWEP:UpdateClientStates()
-	local rate = FrameTime()
-
-	self.CL_AimState = math.Approach(self.CL_AimState, self:GetAimState(), rate)
-	self.CL_RunState = math.Approach(self.CL_RunState, self:GetRunState(), rate)
-
-	local state = Lerp(self.CL_AimState, 1, 0.25)
-
-	self.SwayScale = state
-	self.BobScale = state
-end
-
 function SWEP:TranslateFOV(fov)
-	if CLIENT then
-		self:UpdateClientStates()
-	end
-
 	local ply = self:GetOwner()
 
 	if ply:GetViewEntity() != ply then
@@ -96,8 +80,8 @@ function SWEP:AddViewModelOffset(fraction, pos, ang, offsetPos, offsetAng)
 end
 
 function SWEP:GetViewModelPosition(pos, ang)
-	local aim = self.CL_AimState
-	local run = self.CL_RunState
+	local aim = self:GetAimState()
+	local run = self:GetRunState()
 
 	-- Done this way so that sight and sprint offsets are separate rather than additive
 	local idle = 1 - math.min(aim + run, 1)
@@ -105,6 +89,11 @@ function SWEP:GetViewModelPosition(pos, ang)
 	self:AddViewModelOffset(aim, pos, ang, self.SightsPos, self.SightsAng)
 	self:AddViewModelOffset(run, pos, ang, self.RunSightsPos, self.RunSightsAng)
 	self:AddViewModelOffset(idle, pos, ang, self.CustomIdlePos, self.CustomIdleAng)
+
+	local state = Lerp(aim, 1, 0.25)
+
+	self.SwayScale = state
+	self.BobScale = state
 
 	return pos, ang
 end

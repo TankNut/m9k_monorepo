@@ -89,20 +89,83 @@ function SWEP:Initialize()
 
 	if CLIENT then
 		self.BaseViewModelFOV = self.ViewModelFOV
-		self.CL_AimState = 0
-		self.CL_RunState = 0
 	end
 
 	self.PendingBulletCallbacks = {}
+end
+
+local TICK_INTERVAL = engine.TickInterval()
+local function TICK_TO_TIME(t)
+	return t * TICK_INTERVAL
+end
+
+local floor = math.floor
+local function TIME_TO_TICK(t)
+	return floor(t / TICK_INTERVAL)
+end
+
+local function TICK_FRACTION()
+	local ct = CurTime()
+	local nextTick = TICK_TO_TIME(TIME_TO_TICK(ct) + 1)
+
+	return (nextTick - ct) / TICK_INTERVAL
+end
+
+local function default(typename)
+	if typename == "String" then
+		return ""
+	elseif typename == "Bool" then
+		return false
+	elseif typename == "Float" or typename == "Int" then
+		return 0
+	elseif typename == "Vector" then
+		return Vector()
+	elseif typename == "Angle" then
+		return Angle()
+	elseif typename == "Entity" then
+		return NULL
+	end
+end
+
+function SWEP:InterpolatedNetworkVar(typename, name)
+	if game.SinglePlayer() then
+		self:NetworkVar(typename, name)
+		return
+	end
+
+	self:NetworkVar(typename, "NW" .. name)
+
+	local last = default(typename)
+
+	local getNW = "GetNW" .. name
+	local setNW = "SetNW" .. name
+
+	self["Get" .. name] = function()
+		if SERVER then return self[getNW](self) end
+
+		local fraction = TICK_FRACTION()
+		local inv = 1 - fraction
+
+		return (last * fraction) + (self[getNW](self) * inv)
+	end
+
+	self["Set" .. name] = function(_, val)
+		if CLIENT and IsFirstTimePredicted() then
+			last = self[getNW](self)
+		end
+
+		self[setNW](self, val)
+	end
 end
 
 function SWEP:SetupDataTables()
 	self:NetworkVar("Float", "FinishReload")
 	self:NetworkVar("Float", "NextAction")
 	self:NetworkVar("Float", "CheckAmmo")
-	self:NetworkVar("Float", "RunState")
-	self:NetworkVar("Float", "AimState")
 	self:NetworkVar("Float", "NextIdle")
+
+	self:InterpolatedNetworkVar("Float", "RunState")
+	self:InterpolatedNetworkVar("Float", "AimState")
 
 	self:NetworkVar("Bool", "Running")
 	self:NetworkVar("Bool", "Automatic") -- Honestly might be better to make this an int so you can do burst fire
@@ -193,7 +256,7 @@ function SWEP:UpdateStates()
 	local running = self:ShouldRunState()
 	local aiming = self:ShouldAimState()
 
-	local rate = (1 / self.IronSightTime) * FrameTime()
+	local rate = FrameTime() / self.IronSightTime
 
 	self:SetRunState(math.Approach(self:GetRunState(), running and 1 or 0, rate))
 	self:SetAimState(math.Approach(self:GetAimState(), aiming and 1 or 0, rate))
