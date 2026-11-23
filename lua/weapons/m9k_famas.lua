@@ -63,5 +63,5 @@ SWEP.CustomIdleAng = Vector(0, 0, 0)
 SWEP.SightsPos = Vector(-1, 0, -0.5) -- Applied while aiming
 SWEP.SightsAng = Vector(0, 0, 0)
 
-SWEP.RunSightsPos = Vector( 0.9926, -3.6313, 0.4169 ) -- Applied while sprinting
-SWEP.RunSightsAng = Vector( -9.1165, 43.8507, -18.2067 )
+SWEP.RunSightsPos = Vector(-1, -2, -2) -- Applied while sprinting
+SWEP.RunSightsAng = Vector(-15, 30, -30)
