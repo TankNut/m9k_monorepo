@@ -5,8 +5,6 @@ SWEP.m_WeaponDeploySpeed = 10
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
 
-SWEP.Spawnable = false
-
 SWEP.ViewModelFlip = true
 SWEP.ViewModelFOV = 70
 SWEP.ViewModel = Model("models/weapons/v_invisible_nade.mdl")
