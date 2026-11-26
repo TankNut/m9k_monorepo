@@ -30,6 +30,7 @@ SWEP.Primary.Ammo = "StickyGrenade"
 
 SWEP.GrenadeClass = "m9k_thrown_sticky_grenade"
 
+SWEP.HideWorldModel = true
 SWEP.WElements = {{
 	Model = Model("models/weapons/w_sticky_grenade.mdl"),
 	Bone = "ValveBiped.Bip01_R_Hand",

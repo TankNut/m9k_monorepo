@@ -161,6 +161,10 @@ function SWEP:PostDrawViewModel(vm, _, ply, flags)
 end
 
 function SWEP:DrawWorldModel(flags)
+	if not self.HideWorldModel then
+		self:DrawModel(flags)
+	end
+
 	if self.WElements then
 		local ent = self:GetOwner()
 		if not ent:IsValid() then ent = self end
@@ -168,7 +172,5 @@ function SWEP:DrawWorldModel(flags)
 		for _, tab in ipairs(self.WElements) do
 			self:DrawCSEnt(ent, tab, flags)
 		end
-	else
-		self:DrawModel(flags)
 	end
 end

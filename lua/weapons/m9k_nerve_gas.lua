@@ -39,6 +39,7 @@ SWEP.VElements = {{
 	Material = Material("models/weapons/gv/nerve_vial.vmt")
 }}
 
+SWEP.HideWorldModel = true
 SWEP.WElements = {{
 	Model = Model("models/healthvial.mdl"),
 	Bone = "ValveBiped.Bip01_R_Hand",
