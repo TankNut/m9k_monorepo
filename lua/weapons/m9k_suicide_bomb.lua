@@ -103,25 +103,6 @@ end
 function SWEP:Reload()
 end
 
-local ammoBoxes = {
-	["m9k_ammo_40mm"] = true,
-	["m9k_ammo_c4"] = true,
-	["m9k_ammo_frags"] = true,
-	["m9k_ammo_ieds"] = true,
-	["m9k_ammo_nervegas"] = true,
-	["m9k_ammo_nuke"] = true,
-	["m9k_ammo_proxmines"] = true,
-	["m9k_ammo_rockets"] = true,
-	["m9k_ammo_stickynades"] = true,
-	["m9k_ammo_357"] = true,
-	["m9k_ammo_ar2"] = true,
-	["m9k_ammo_buckshot"] = true,
-	["m9k_ammo_pistol"] = true,
-	["m9k_ammo_smg"] = true,
-	["m9k_ammo_sniper_rounds"] = true,
-	["m9k_ammo_winchester"] = true
-}
-
 function SWEP:PlantC4()
 	self:TakePrimaryAmmo(1)
 
@@ -150,12 +131,10 @@ function SWEP:PlantC4()
 		ent:Spawn()
 		ent:Activate()
 
-		print(ent)
-
 		if tr.Hit then
 			local attach = tr.Entity
 
-			if ammoBoxes[attach:GetClass()] then
+			if string.find(attach:GetClass(), "^m9k_ammo_") then
 				ent:SetParent(attach)
 				attach.Planted = true
 			elseif not attach:IsNPC() and not attach:IsPlayer() then

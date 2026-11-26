@@ -1,145 +1,124 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_proxy_mine" -- must be the name of your swep but NO CAPITALS!
+AddCSLuaFile()
 
-SWEP.Category               = "M9K Specialties"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "Prox Mine" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 4
-SWEP.SlotPos                = 26
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = false -- set false if you want no crosshair
-SWEP.Weight                 = 2
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "slam"
+SWEP.m_WeaponDeploySpeed = 10
 
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_proxy_mine")
+end
 
+SWEP.BounceWeaponIcon = false
+SWEP.DrawWeaponInfoBox = false
 
-SWEP.ViewModelFOV           = 70
-SWEP.ViewModelFlip          = false
-SWEP.ViewModel              = "models/weapons/v_px.mdl"
-SWEP.WorldModel             = "models/weapons/w_px.mdl"
-SWEP.Base                   = "bobs_gun_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = true
+SWEP.PrintName = "Prox Mine"
+SWEP.Author = "TankNut"
 
-SWEP.Primary.Sound          = ""
-SWEP.Primary.RPM            = 10 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 1
-SWEP.Primary.DefaultClip    = 1
-SWEP.Primary.KickUp         = 0 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = false -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "ProxMine"
--- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a metal piercing shotgun slug
+SWEP.Category = "M9K Redux: Specialties"
 
-SWEP.Primary.Round = "m9k_proxy_mine"
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.Secondary.IronFOV      = 0 -- How much you 'zoom' in. Less is more!
+SWEP.Slot = 4
 
-SWEP.Primary.NumShots       = 0 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 0 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = 0 -- Define from-the-hip accuracy (1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = 0 -- Ironsight accuracy, should be the same for shotguns
---none of this matters for IEDs and other ent-tossing sweps
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 70
+SWEP.ViewModel = Model("models/weapons/v_px.mdl")
+SWEP.WorldModel = Model("models/weapons/w_px.mdl")
 
-SWEP.SightsPos              = Vector( 0, 0, 0 ) -- These are the same as IronSightPos and IronSightAng
-SWEP.SightsAng              = Vector( 0, 0, 0 ) -- No, I don't know why
-SWEP.RunSightsPos           = Vector( 0, 0, 0 )
-SWEP.RunSightsAng           = Vector( 0, 0, 0 )
+SWEP.Primary.Ammo = "ProxMine"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = 1
 
--- SWEP.WElements = {
--- ["prox"] = { type = "Model", model = "models/weapons/w_px_planted.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.062, 7.243, 1.075), angle = Angle(-143.445, 179.988, 0), size = Vector(1.049, 1.049, 1.049), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
--- }
+SWEP.Secondary.Ammo = ""
+SWEP.Secondary.Automatic = false
+SWEP.Secondary.ClipSize = -1
+SWEP.Secondary.DefaultClip = 0
 
---and now to the nasty parts of this swep...
+function SWEP:Initialize()
+	self:SetHoldType("slam")
+end
+
+function SWEP:SetupDataTables()
+	self:NetworkVar("Float", "FinishPlant")
+end
+
+function SWEP:Deploy()
+	self:SetHoldType("slam")
+	self:SendWeaponAnim(ACT_VM_DRAW)
+	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
+
+	return true
+end
 
 function SWEP:PrimaryAttack()
-    if self:CanPrimaryAttack() then
-        local owner = self:GetOwner()
+	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 
-        self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-        self:SetNextPrimaryFire( CurTime() + 1 / (self.Primary.RPM / 60) )
-        local plant = owner:GetViewModel():SequenceDuration()
-        timer.Simple( plant, function()
-            if not IsValid( self ) then return end
-            if not IsValid( owner ) then return end
-
-            local activeWeapon = owner:GetActiveWeapon()
-            if activeWeapon ~= self then return end
-
-            self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
-            local tr = {}
-            tr.start = owner:M9K_GetShootPos()
-            tr.endpos = owner:M9K_GetShootPos() + 100 * owner:GetAimVector()
-            tr.filter = { owner }
-            local trace = util.TraceLine( tr )
-            self:TakePrimaryAmmo( 1 )
-            if (CLIENT) then return end
-            local proxy = ents.Create( "m9k_proxy" )
-            proxy:SetPos( trace.HitPos + trace.HitNormal )
-            trace.HitNormal.z = -trace.HitNormal.z
-            proxy:SetAngles( trace.HitNormal:Angle() - Angle( 90, 180, 0 ) )
-            proxy.ProxyBombOwner = owner
-            proxy:Spawn()
-
-            local boxes
-            local parentme = {}
-            parentme[1] = "m9k_ammo_40mm"
-            parentme[2] = "m9k_ammo_c4"
-            parentme[3] = "m9k_ammo_frags"
-            parentme[4] = "m9k_ammo_ieds"
-            parentme[5] = "m9k_ammo_nervegas"
-            parentme[6] = "m9k_ammo_nuke"
-            parentme[7] = "m9k_ammo_proxmines"
-            parentme[8] = "m9k_ammo_rockets"
-            parentme[9] = "m9k_ammo_stickynades"
-            parentme[10] = "m9k_ammo_357"
-            parentme[11] = "m9k_ammo_ar2"
-            parentme[12] = "m9k_ammo_buckshot"
-            parentme[13] = "m9k_ammo_pistol"
-            parentme[14] = "m9k_ammo_smg"
-            parentme[15] = "m9k_ammo_sniper_rounds"
-            parentme[16] = "m9k_ammo_winchester"
-
-            if trace.Entity ~= nil and trace.Entity:IsValid() then
-                for k, v in ipairs( parentme ) do
-                    if trace.Entity:GetClass() == v then
-                        boxes = trace.Entity
-                    end
-                end
-            end
-
-            if trace.Entity and trace.Entity:IsValid() then
-                if trace.Entity and trace.Entity:IsValid() then
-                    if boxes and trace.Entity:GetPhysicsObject():IsValid() then
-                        proxy:SetParent( trace.Entity )
-                        trace.Entity.Planted = true
-                    elseif not trace.Entity:IsNPC() and not trace.Entity:IsPlayer() and trace.Entity:GetPhysicsObject():IsValid() then
-                        constraint.Weld( proxy, trace.Entity )
-                    end
-                end
-            else
-                proxy:SetMoveType( MOVETYPE_NONE )
-            end
-            if not trace.Hit then
-                proxy:SetMoveType( MOVETYPE_VPHYSICS )
-            end
-            self:CheckWeaponsAndAmmo()
-        end )
-    end
+	self:SetFinishPlant(CurTime() + self:SequenceDuration())
+	self:SetNextPrimaryFire(math.huge)
 end
 
 function SWEP:SecondaryAttack()
 end
 
-function SWEP:ThinkCustom()
+function SWEP:Reload()
+end
+
+function SWEP:PlantMine()
+	self:TakePrimaryAmmo(1)
+
+	local ply = self:GetOwner()
+
+	ply:SetAnimation(PLAYER_ATTACK1)
+
+	self:SendWeaponAnim(ACT_VM_DRAW)
+	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
+	self:SetNextSecondaryFire(CurTime())
+
+	if SERVER then
+		local tr = util.TraceLine({
+			start = ply:M9K_GetShootPos(),
+			endpos = ply:M9K_GetShootPos() + ply:GetAimVector() * 100,
+			filter = ply
+		})
+
+		tr.HitNormal.z = -tr.HitNormal.z
+
+		local ent = ents.Create("m9k_proxy")
+		ent:SetPos(tr.HitPos + tr.HitNormal)
+		ent:SetAngles(tr.HitNormal:Angle() - Angle(90, 180, 0))
+		ent.ProxyBombOwner = ply
+		ent:Spawn()
+		ent:Activate()
+
+		if tr.Hit then
+			local attach = tr.Entity
+
+			if string.find(attach:GetClass(), "^m9k_ammo_") then
+				ent:SetParent(attach)
+				attach.Planted = true
+			elseif not attach:IsNPC() and not attach:IsPlayer() then
+				ent:SetParent(attach)
+			end
+		else
+			ent:SetMoveType(MOVETYPE_VPHYSICS)
+		end
+
+		if self:Ammo1() == 0 then
+			ply:StripWeapon(self:GetClass())
+		end
+	end
+end
+
+function SWEP:Think()
+	local time = self:GetFinishPlant()
+	local ct = CurTime()
+
+	if time > 0 and time <= ct then
+		self:SetFinishPlant(0)
+		self:PlantMine()
+	end
+end
+
+function SWEP:OnReloaded()
+	self:SetWeaponHoldType(self:GetHoldType())
 end
