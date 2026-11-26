@@ -105,10 +105,12 @@ function SWEP:InScope()
 	return self:ShouldAimState()
 end
 
-function SWEP:PreDrawViewModel()
+function SWEP:PreDrawViewModel(vm, ply, weapon, flags)
 	if self:InScope() then
 		return true
 	end
+
+	return BaseClass.PreDrawViewModel(self, vm, ply, weapon, flags)
 end
 
 function SWEP:DrawScope(texture)
