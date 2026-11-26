@@ -147,12 +147,6 @@ function SWEP:Think()
 	end
 end
 
-function SWEP:OnReloaded()
-	BaseClass.OnReloaded(self)
-
-	self:SetWeaponHoldType(self:GetHoldType())
-end
-
 function SWEP:OnRemove()
 	BaseClass.OnRemove(self)
 end

@@ -18,6 +18,8 @@ function SWEP:OnReloaded()
 	if CLIENT then
 		self:RemoveCSEnts()
 	end
+
+	self:SetWeaponHoldType(self:GetHoldType())
 end
 
 function SWEP:OnRemove()
@@ -80,5 +82,17 @@ function SWEP:InterpolatedNetworkVar(name)
 		-- The server doesn't interact with this system at all
 		self["Get" .. name] = get
 		self["Set" .. name] = set
+	end
+end
+
+if CLIENT then
+	local cvar_ZoomSensitivityRatio = GetConVar("zoom_sensitivity_ratio")
+
+	function SWEP:AdjustMouseSensitivity(sensitivity, localFOV, defaultFOV)
+		if localFOV == defaultFOV then
+			return 1
+		end
+
+		return (localFOV / defaultFOV) * cvar_ZoomSensitivityRatio:GetFloat()
 	end
 end

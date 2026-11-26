@@ -1,7 +1,5 @@
 AddCSLuaFile()
 
-local cvar_ZoomSensitivityRatio = GetConVar("zoom_sensitivity_ratio")
-
 -- mathlib.h
 local function simpleSplineRemapValClamped(value, a, b, c, d)
 	if a == b then return value >= b and d or c end
@@ -43,14 +41,6 @@ end
 
 if SERVER then
 	return
-end
-
-function SWEP:AdjustMouseSensitivity(sensitivity, localFOV, defaultFOV)
-	if localFOV == defaultFOV then
-		return 1
-	end
-
-	return (localFOV / defaultFOV) * cvar_ZoomSensitivityRatio:GetFloat()
 end
 
 function SWEP:AddViewModelOffset(fraction, pos, ang, offsetPos, offsetAng)

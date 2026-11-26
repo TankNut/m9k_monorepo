@@ -234,8 +234,6 @@ end
 function SWEP:OnReloaded()
 	BaseClass.OnReloaded(self)
 
-	self:SetWeaponHoldType(self:GetHoldType())
-
 	if CLIENT then
 		self.BaseViewModelFOV = self.ViewModelFOV
 	end
