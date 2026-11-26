@@ -43,6 +43,9 @@ SWEP.Primary.KickHorizontal = 1 -- Maximum side recoil (koolaid)
 -- Sounds
 SWEP.Primary.Sound = "RPGF.single" -- Sound played when firing
 
+-- Aiming
+SWEP.Secondary.IronFOV = 40 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
 -- Extra modes
 SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor

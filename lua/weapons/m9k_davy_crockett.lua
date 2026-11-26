@@ -1,272 +1,172 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_davy_crockett" -- must be the name of your swep but NO CAPITALS!
-SWEP.Category               = "M9K Specialties"
-SWEP.Author                 = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = ""
-SWEP.Instructions           = ""
-SWEP.MuzzleAttachment       = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment   = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName              = "Davy Crockett" -- Weapon name (Shown on HUD)
-SWEP.Slot                   = 4
-SWEP.SlotPos                = 31
-SWEP.DrawAmmo               = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair          = false -- set false if you want no crosshair
-SWEP.Weight                 = 30
-SWEP.AutoSwitchTo           = true
-SWEP.AutoSwitchFrom         = true
-SWEP.HoldType               = "rpg"
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_gun_base")
 
+SWEP.Base = "m9k_gun_base"
 
-
-SWEP.ViewModelFOV           = 70
-SWEP.ViewModelFlip          = false
-SWEP.ViewModel              = "models/weapons/v_RL7.mdl"
-SWEP.WorldModel             = "models/weapons/w_RL7.mdl"
-SWEP.Base                   = "bobs_gun_base"
-SWEP.Spawnable              = true
-SWEP.AdminSpawnable         = true
-SWEP.FiresUnderwater        = true
-
-SWEP.Primary.Sound          = ""
-SWEP.Primary.RPM            = 20 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize       = 1
-SWEP.Primary.DefaultClip    = 1
-SWEP.Primary.KickUp         = 0 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown       = 0 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal = 0 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic      = false -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo           = "Nuclear_Warhead"
--- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a metal piercing shotgun slug
-
-SWEP.Primary.Round = "m9k_launched_davycrockett"
-
-SWEP.Secondary.IronFOV      = 40 -- How much you 'zoom' in. Less is more!
-
-SWEP.Primary.NumShots       = 0 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage         = 0 -- Base damage per bullet
-SWEP.Primary.SpreadHip         = 0 -- Define from-the-hip accuracy (1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights   = 0 -- Ironsight accuracy, should be the same for shotguns
---none of this matters for IEDs and other ent-tossing sweps
-
-SWEP.SightsPos              = Vector( -3.7384, -5.7481, -0.2713 )
-SWEP.SightsAng              = Vector( 1.1426, 0.0675, 0 )
-SWEP.RunSightsPos           = Vector( 2.4946, -1.5644, 1.699 )
-SWEP.RunSightsAng           = Vector( -20.1104, 35.1164, -12.959 )
-
-
-if GetConVar( "M9K_Davy_Crockett_Timer" ) == nil then
-    SWEP.NextFireTime = 3
-    SWEP.Countdown = 3
-    print( "M9K_Davy_Crockett_Timer con var is missing! You may have a corrupt addon, or hit the lua limit." )
-else
-    SWEP.NextFireTime = GetConVarNumber( "M9K_Davy_Crockett_Timer" )
-    SWEP.Countdown = GetConVarNumber( "M9K_Davy_Crockett_Timer" )
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_davy_crockett")
 end
 
-SWEP.FireDelay = SWEP.NextFireTime
+-- Base info
+SWEP.PrintName = "Davy Crockett"
+SWEP.Author = "TankNut"
 
---and now to the nasty parts of this swep...
+SWEP.Category = "M9K Redux: Specialties"
+
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
+
+SWEP.Slot = 4
+
+-- Models
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 70
+
+SWEP.ViewModel = Model("models/weapons/v_RL7.mdl")
+SWEP.WorldModel = Model("models/weapons/w_rl7.mdl")
+
+SWEP.HoldType = "rpg"
+
+-- Stats
+SWEP.Primary.Ammo = "Nuclear_Warhead"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = 1
+SWEP.Primary.DefaultClip = 1
+
+SWEP.Primary.RPM = 20 -- Rounds Per Minute
+
+-- Recoil
+SWEP.Primary.KickUp = 0 -- Maximum up recoil (rise)
+SWEP.Primary.KickDown = 0 -- Maximum down recoil (skeet)
+SWEP.Primary.KickHorizontal = 0 -- Maximum side recoil (koolaid)
+
+-- Sounds
+SWEP.Primary.Sound = "RPGF.single" -- Sound played when firing
+
+-- Aiming
+SWEP.Secondary.IronFOV = 40 -- This sucks, it'll work but SWEP.Secondary.ScopeZoom is better
+
+-- Extra modes
+SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
+SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
+
+-- Viewmodel offsets
+SWEP.CustomIdlePos = Vector(0, 0, 0) -- Applied when the weapon is idle
+SWEP.CustomIdleAng = Vector(0, 0, 0)
+
+SWEP.SightsPos = Vector(-1.5, -3, 0.5) -- Applied while aiming
+SWEP.SightsAng = Vector(0, 0, -5)
+
+SWEP.RunSightsPos = Vector( 2.4946, -1.5644, 1.699 ) -- Applied while sprinting
+SWEP.RunSightsAng = Vector( -20.1104, 35.1164, -12.959 )
+
+SWEP.VElements = {{
+	Model = "models/Failure/MK6/m62.mdl",
+	Bone = "Rocket",
+	Pos = Vector(-0.093, 7.412, -0.005),
+	Ang = Angle(-45, 0, 90),
+	Scale = Vector(0.449, 0.449, 0.449)
+}}
+
+SWEP.WElements = {{
+	Model = "models/failure/mk6/m62.mdl",
+	Bone = "ValveBiped.Bip01_R_Hand",
+	Pos = Vector(28.054, -1, -5.1),
+	Ang = Angle(90, 0, 0),
+	Scale = Vector(0.504, 0.504, 0.504)
+}}
+
+local cvar_Allowed = GetConVar("DavyCrockettAllowed")
+local cvar_AdminOnly = GetConVar("DavyCrocketAdminOnly")
+local cvar_Timer = GetConVar("M9K_Davy_Crockett_Timer")
+
+function SWEP:SetupDataTables()
+	BaseClass.SetupDataTables(self)
+
+	self:NetworkVar("Bool", "Bricked")
+	self:NetworkVar("Float", "DeployTimer")
+end
+
 function SWEP:Deploy()
-    local owner = self:GetOwner()
+	BaseClass.Deploy(self)
 
-    if timer.Exists( "davy_crocket_" .. owner:UniqueID() ) then
-        timer.Remove( "davy_crocket_" .. owner:UniqueID() )
-    end
-    self:SetIronsights( false )
-    self:SendWeaponAnim( ACT_VM_DRAW )
+	if SERVER then
+		local ply = self:GetOwner()
 
-    if GetConVar( "DavyCrockettAllowed" ):GetBool() then
-        if GetConVar( "DavyCrocketAdminOnly" ):GetBool() and not owner:IsAdmin() then
-            owner:PrintMessage( HUD_PRINTCENTER, "Nukes are admin only on this server." )
-        else
-            self.FireDelay = CurTime() + self.NextFireTime
-            self:SetNextPrimaryFire( self.FireDelay )
-            owner:PrintMessage( HUD_PRINTCENTER, "Warhead will be armed in " .. self.Countdown .. " seconds." )
-            owner.DCCount = self.Countdown - 1
-            timer.Create( "davy_crocket_" .. owner:UniqueID(), 1, self.Countdown, function()
-                if not IsValid( self ) then return end
-                if not IsValid( owner ) then return end
-                if not IsValid( owner:GetActiveWeapon() ) then return end
-                if owner:GetActiveWeapon():GetClass() ~= self.Gun then
-                    timer.Remove( "davy_crocket_" .. owner:UniqueID() )
-                    return
-                end
+		if not cvar_Allowed:GetBool() then
+			self:SetBricked(true)
+			ply:PrintMessage(HUD_PRINTCENTER, "Nukes are admin only on this server.")
 
-                self:DeployCountDownFunc( owner.DCCount )
-                owner.DCCount = owner.DCCount - 1
-            end )
-        end
-    else
-        owner:PrintMessage( HUD_PRINTCENTER, "Nukes are not allowed on this server." )
-    end
+			return
+		elseif cvar_AdminOnly:GetBool() and not ply:IsAdmin() then
+			self:SetBricked(true)
+			ply:PrintMessage(HUD_PRINTCENTER, "Nukes are admin only on this server.")
 
-    if not owner:IsNPC() then
-        self.ResetSights = CurTime() + owner:GetViewModel():SequenceDuration()
-    end
+			return
+		end
 
-    self:SetHoldType( self.HoldType )
-    self:SetReloading( false )
-    return true
+		local time = cvar_Timer:GetFloat()
+
+		ply:PrintMessage(HUD_PRINTCENTER, "Warhead will be armed in " .. string.NiceTime(time) .. ".")
+
+		self:SetBricked(false)
+		self:SetDeployTimer(CurTime() + time)
+		self.NextBeep = CurTime() + 1
+	end
+
+	return true
 end
 
-function SWEP:DeployCountDownFunc( count )
-    local owner = self:GetOwner()
+function SWEP:CanPrimaryAttack()
+	if self:GetBricked() or self:GetDeployTimer() > CurTime() then
+		return false
+	end
 
-    if not IsValid( owner ) then return end
-    if owner:GetActiveWeapon():GetClass() ~= self.Gun then
-        timer.Remove( "davy_crocket_" .. owner:UniqueID() )
-        return
-    end
-    if count == 0 then
-        owner:PrintMessage( HUD_PRINTTALK, "WARHEAD IS ARMED AND READY TO FIRE" )
-    elseif count == 1 then
-        owner:PrintMessage( HUD_PRINTTALK, count .. " second remaining!" )
-    else
-        owner:PrintMessage( HUD_PRINTTALK, count .. " seconds remaining" )
-    end
-    if count <= 5 then
-        self:EmitSound( "C4.PlantSound" )
-    end
+	return BaseClass.CanPrimaryAttack(self)
 end
 
-function SWEP:PrimaryAttack()
-    local owner = self:GetOwner()
+function SWEP:Think()
+	BaseClass.Think(self)
 
-    if self:CanPrimaryAttack() and self.FireDelay <= CurTime() and ( not self:IsRunning() or self.CanShootWhileRunning ) then
-        if owner:IsPlayer() then
-            if GetConVar( "DavyCrockettAllowed" ):GetBool() then
-                if GetConVar( "DavyCrocketAdminOnly" ):GetBool() and not owner:IsAdmin() then
-                    owner:PrintMessage( HUD_PRINTCENTER, "Nukes are admin only on this server." )
-                else
-                    self:FireRocket()
-                    self:EmitSound( "RPGF.single" )
-                    self:TakePrimaryAmmo( 1 )
-                    self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-                    owner:SetAnimation( PLAYER_ATTACK1 )
-                    owner:MuzzleFlash()
-                    self:SetNextPrimaryFire( CurTime() + 1 / (self.Primary.RPM / 60) )
-                end
-            else
-                owner:PrintMessage( HUD_PRINTCENTER, "Nukes are not allowed on this server." )
-            end
-        end
-        self:CheckWeaponsAndAmmo()
-    end
+	if SERVER and self.NextBeep and self.NextBeep <= CurTime() then
+		local ply = self:GetOwner()
+		local timeLeft = self:GetDeployTimer() - CurTime()
+
+		if timeLeft <= 5 then
+			self:EmitSound("C4.PlantSound")
+		end
+
+		if timeLeft <= 0 then
+			ply:PrintMessage(HUD_PRINTCENTER, "WARHEAD IS ARMED AND READY TO FIRE")
+		else
+			ply:PrintMessage(HUD_PRINTCENTER, string.NiceTime(math.ceil(timeLeft)) .. " remaining!")
+		end
+
+		if timeLeft > 0 then
+			self.NextBeep = CurTime() + math.min(timeLeft, 1)
+		else
+			self.NextBeep = nil
+		end
+	end
 end
 
-function SWEP:FireRocket()
-    local owner = self:GetOwner()
+function SWEP:SetWeaponAnim(act)
+	if act == ACT_VM_IDLE then return end
 
-    local aim = owner:GetAimVector()
-    local pos = owner:M9K_GetShootPos()
-
-    if SERVER then
-        local rocket = ents.Create( self.Primary.Round )
-        if not rocket:IsValid() then return false end
-        rocket:SetAngles( aim:Angle() + Angle( 90, 0, 0 ) )
-        rocket:SetPos( pos )
-        rocket:SetOwner( owner )
-        rocket.Owner = owner
-        rocket:Spawn()
-        rocket:Activate()
-    end
+	return BaseClass.SetWeaponAnim(self, act)
 end
 
-function SWEP:SecondaryAttack()
-end
+function SWEP:FireWeapon()
+	if SERVER then
+		local owner = self:GetOwner()
+		local ent = ents.Create("m9k_launched_davycrockett")
 
-function SWEP:Holster()
-    local owner = self:GetOwner()
+		ent:SetPos(self:GetShootPos())
+		ent:SetAngles(owner:GetAimVector():Angle() + Angle(90, 0, 0))
+		ent:SetOwner(owner)
+		ent:Spawn()
+		ent:Activate()
+	end
 
-    if CLIENT and IsValid( owner ) and not owner:IsNPC() then
-        local vm = owner:GetViewModel()
-        if IsValid( vm ) then
-            self:ResetBonePositions( vm )
-        end
-    end
-    if timer.Exists( "davy_crocket_" .. owner:UniqueID() ) then timer.Remove( "davy_crocket_" .. owner:UniqueID() ) end
-    return true
-end
-
-SWEP.VElements = {
-    ["bomb"] = { type = "Model", model = "models/Failure/MK6/m62.mdl", bone = "Rocket", rel = "", pos = Vector( -0.093, 7.412, -0.005 ), angle = Angle( -45, 0, 90 ), size = Vector( 0.449, 0.449, 0.449 ), color =
-        Color( 255, 255, 255, 255 ), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-}
-
-SWEP.WElements = {
-    ["nuke"] = { type = "Model", model = "models/failure/mk6/m62.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector( 28.054, 0.268, -5.1 ), angle = Angle( -90, 0, 0 ), size = Vector( 0.504,
-        0.504, 0.504 ), color = Color( 255, 255, 255, 255 ), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-}
-
---[[---------------------------------------------------------
-IronSight
--------------------------------------------------------]]
-function SWEP:IronSight()
-    local owner = self:GetOwner()
-
-    if not IsValid( owner ) then return end
-
-    if not owner:IsNPC() then
-        if self.ResetSights and CurTime() >= self.ResetSights then
-            self.ResetSights = nil
-        end
-    end
-
-    if self.SelectiveFire and self.NextAction < CurTime() and not (self:GetReloading()) then
-        if owner:KeyDown( IN_USE ) and owner:KeyPressed( IN_RELOAD ) then
-            self:SelectFireMode()
-        end
-    end
-
-    -- --copy this...
-    if self:StartedRunning() and not (self:GetReloading()) then -- If you are running
-        if self:GetNextPrimaryFire() <= (CurTime() + 0.3) then
-            self:SetNextPrimaryFire( CurTime() + 0.3 ) -- Make it so you can't shoot for another quarter second
-        end
-        self.IronSightsPos = self.RunSightsPos -- Hold it down
-        self.IronSightsAng = self.RunSightsAng -- Hold it down
-        self:SetIronsights( true )
-        owner:SetFOV( 0, 0.3 )
-        self.DrawCrosshair = false
-    end
-
-    if self:StoppedRunning() then -- If you release run then
-        self:SetIronsights( false )
-        owner:SetFOV( 0, 0.3 )
-        self.DrawCrosshair = self.OrigCrossHair
-    end -- Shoulder the gun
-
-    -- --down to this
-    if not owner:KeyDown( IN_USE ) and ( not self:IsRunning() or self.CanShootWhileRunning ) then
-        -- --If the key E (Use Key) is not pressed, then
-
-        if owner:KeyPressed( IN_ATTACK2 ) and not (self:GetReloading()) then
-            owner:SetFOV( self.Secondary.IronFOV, 0.3 )
-            self.IronSightsPos = self.SightsPos -- Bring it up
-            self.IronSightsAng = self.SightsAng -- Bring it up
-            self:SetIronsights( true, owner )
-            self.DrawCrosshair = false
-
-            if CLIENT then return end
-        end
-    end
-
-    if owner:KeyReleased( IN_ATTACK2 ) and not owner:KeyDown( IN_USE ) and ( not self:IsRunning() or self.CanShootWhileRunning ) then
-        -- --If the right click is released, then
-        owner:SetFOV( 0, 0.3 )
-        self.DrawCrosshair = self.OrigCrossHair
-        self:SetIronsights( false )
-
-        if CLIENT then return end
-    end
-
-    if owner:KeyDown( IN_ATTACK2 ) and not owner:KeyDown( IN_USE ) and ( not self:IsRunning() or self.CanShootWhileRunning ) then
-        self.SwayScale = 0.05
-        self.BobScale  = 0.05
-    else
-        self.SwayScale = 1.0
-        self.BobScale  = 1.0
-    end
+	self:AddRecoil()
 end
