@@ -1,11 +1,18 @@
--- Not actually SCK, an approximation since basically fuck-all is used
+-- Stripped down/minimal version of an SCK-esque implementation since it's barely used
 
-function SWEP:RemoveFakeEntities()
-	SafeRemoveEntity(self.FakeViewEntity)
-	SafeRemoveEntity(self.FakeWorldEntity)
+function SWEP:InitSCK()
+	self.CSEnts = {}
 end
 
-local function createEntity(tab)
+function SWEP:RemoveCSEnts()
+	for _, ent in pairs(self.CSEnts) do
+		ent:Remove()
+	end
+
+	self.CSEnts = {}
+end
+
+function SWEP:CreateCSEnt(tab)
 	local ent = ClientsideModel(tab.Model)
 	ent:SetNoDraw(true)
 
@@ -14,21 +21,28 @@ local function createEntity(tab)
 
 	ent:EnableMatrix("RenderMultiply", matrix)
 
+	tab.Entity = ent
+	table.insert(self.CSEnts, ent)
+
 	return ent
 end
 
 local vector_one = Vector(1, 1, 1)
+local matrix = Matrix()
 
-function SWEP:RenderFakeEntity(parent, ent, tab, flags)
+function SWEP:DrawCSEnt(parent, tab, flags)
 	local bone = parent:LookupBone(tab.Bone)
+	if not bone then return end
 
-	if not bone then
-		return
+	local ent = tab.Entity
+
+	if not IsValid(ent) then
+		ent = self:CreateCSEnt(tab)
 	end
 
-	local matrix = parent:GetBoneMatrix(bone)
-	matrix:SetScale(vector_one)
+	parent:CopyBoneMatrix(bone, matrix)
 
+	matrix:SetScale(vector_one)
 	matrix:Translate(tab.Pos)
 	matrix:Rotate(tab.Ang)
 
@@ -59,7 +73,7 @@ function SWEP:BuildBoneCache(vm)
 
 	for i = 0, vm:GetBoneCount() - 1 do
 		self.BoneCache[i] = {
-			parent = vm:GetBoneParent(i)
+			Parent = vm:GetBoneParent(i)
 		}
 	end
 end
@@ -67,21 +81,21 @@ end
 function SWEP:GetBoneScale(vm, index)
 	local bone = self.BoneCache[index]
 
-	if bone.frame == FrameNumber() then
-		return bone.scale
+	if bone.Frame == FrameNumber() then
+		return bone.Scale
 	end
 
-	bone.frame = FrameNumber()
+	bone.Frame = FrameNumber()
 
 	local mod = self.ViewModelBoneMods[vm:GetBoneName(index)]
 
-	bone.scale = mod and Vector(mod.scale) or Vector(1, 1, 1)
+	bone.Scale = mod and Vector(mod.Scale) or Vector(1, 1, 1)
 
-	if bone.scale != nan and bone.parent != -1 then
-		bone.scale:Mul(self:GetBoneScale(vm, bone.parent))
+	if bone.Scale != nan and bone.Parent != -1 then
+		bone.Scale:Mul(self:GetBoneScale(vm, bone.Parent))
 	end
 
-	return bone.scale
+	return bone.Scale
 end
 
 function SWEP:ApplyBoneMods(vm)
@@ -94,12 +108,12 @@ function SWEP:ApplyBoneMods(vm)
 		end
 
 		if mod then
-			if mod.angle != angle_zero then
-				vm:ManipulateBoneAngles(i, mod.angle)
+			if mod.Ang != angle_zero then
+				vm:ManipulateBoneAngles(i, mod.Ang)
 			end
 
-			if mod.pos != vector_origin then
-				vm:ManipulateBonePosition(i, mod.pos)
+			if mod.Pos != vector_origin then
+				vm:ManipulateBonePosition(i, mod.Pos)
 			end
 		end
 	end
@@ -135,12 +149,10 @@ function SWEP:PreDrawViewModel(vm, _, ply, flags)
 end
 
 function SWEP:PostDrawViewModel(vm, _, ply, flags)
-	if self.FakeViewModel then
-		if not IsValid(self.FakeViewEntity) then
-			self.FakeViewEntity = createEntity(self.FakeViewModel)
+	if self.VElements then
+		for _, tab in ipairs(self.VElements) do
+			self:DrawCSEnt(vm, tab, flags)
 		end
-
-		self:RenderFakeEntity(vm, self.FakeViewEntity, self.FakeViewModel, flags)
 	end
 
 	if self.ViewModelBoneMods then
@@ -149,15 +161,13 @@ function SWEP:PostDrawViewModel(vm, _, ply, flags)
 end
 
 function SWEP:DrawWorldModel(flags)
-	if self.FakeWorldModel then
-		if not IsValid(self.FakeWorldEntity) then
-			self.FakeWorldEntity = createEntity(self.FakeWorldModel)
-		end
-
+	if self.WElements then
 		local ent = self:GetOwner()
 		if not ent:IsValid() then ent = self end
 
-		self:RenderFakeEntity(ent, self.FakeWorldEntity, self.FakeWorldModel, flags)
+		for _, tab in ipairs(self.WElements) do
+			self:DrawCSEnt(ent, tab, flags)
+		end
 	else
 		self:DrawModel(flags)
 	end

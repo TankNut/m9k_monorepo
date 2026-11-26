@@ -1,4 +1,5 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("m9k_base")
 
 --[[
 	A note about variable naming for GetOwner():
@@ -6,7 +7,7 @@ AddCSLuaFile()
 	ply, owner and npc are used interchangably based on which code paths are reachable for which type, SWEP:Think and Reload never get called by NPC's for example so we can safely assume it'll be a player whereas SWEP:PrimaryFire will be called by NPC's, hence the use of owner in that context.
 ]]
 
-SWEP.m_WeaponDeploySpeed = 10
+SWEP.Base = "m9k_base"
 
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
@@ -84,6 +85,8 @@ include("sh_running.lua")
 include("sh_view.lua")
 
 function SWEP:Initialize()
+	BaseClass.Initialize(self)
+
 	self:SetHoldType(self.HoldType)
 	self:SetAutomatic(self.Primary.Automatic)
 
@@ -94,78 +97,14 @@ function SWEP:Initialize()
 	self.PendingBulletCallbacks = {}
 end
 
-local TICK_INTERVAL = engine.TickInterval()
-local function TICK_TO_TIME(t)
-	return t * TICK_INTERVAL
-end
-
-local floor = math.floor
-local function TIME_TO_TICK(t)
-	return floor(t / TICK_INTERVAL)
-end
-
-local function TICK_FRACTION()
-	local ct = CurTime()
-	local nextTick = TICK_TO_TIME(TIME_TO_TICK(ct) + 1)
-
-	return (nextTick - ct) / TICK_INTERVAL
-end
-
-local function default(typename)
-	if typename == "String" then
-		return ""
-	elseif typename == "Bool" then
-		return false
-	elseif typename == "Float" or typename == "Int" then
-		return 0
-	elseif typename == "Vector" then
-		return Vector()
-	elseif typename == "Angle" then
-		return Angle()
-	elseif typename == "Entity" then
-		return NULL
-	end
-end
-
-function SWEP:InterpolatedNetworkVar(typename, name)
-	if game.SinglePlayer() then
-		self:NetworkVar(typename, name)
-		return
-	end
-
-	self:NetworkVar(typename, "NW" .. name)
-
-	local last = default(typename)
-
-	local getNW = "GetNW" .. name
-	local setNW = "SetNW" .. name
-
-	self["Get" .. name] = function()
-		if SERVER then return self[getNW](self) end
-
-		local fraction = TICK_FRACTION()
-		local inv = 1 - fraction
-
-		return (last * fraction) + (self[getNW](self) * inv)
-	end
-
-	self["Set" .. name] = function(_, val)
-		if CLIENT and IsFirstTimePredicted() then
-			last = self[getNW](self)
-		end
-
-		self[setNW](self, val)
-	end
-end
-
 function SWEP:SetupDataTables()
 	self:NetworkVar("Float", "FinishReload")
 	self:NetworkVar("Float", "NextAction")
 	self:NetworkVar("Float", "CheckAmmo")
 	self:NetworkVar("Float", "NextIdle")
 
-	self:InterpolatedNetworkVar("Float", "RunState")
-	self:InterpolatedNetworkVar("Float", "AimState")
+	self:InterpolatedNetworkVar("RunState")
+	self:InterpolatedNetworkVar("AimState")
 
 	self:NetworkVar("Bool", "Running")
 	self:NetworkVar("Bool", "Automatic") -- Honestly might be better to make this an int so you can do burst fire
@@ -293,6 +232,8 @@ function SWEP:Think()
 end
 
 function SWEP:OnReloaded()
+	BaseClass.OnReloaded(self)
+
 	self:SetWeaponHoldType(self:GetHoldType())
 
 	if CLIENT then

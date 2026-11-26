@@ -1,7 +1,5 @@
 AddCSLuaFile()
 
-SWEP.m_WeaponDeploySpeed = 10
-
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
 
@@ -43,6 +41,8 @@ SWEP.BaseData = {}
 SWEP.AttackData = {}
 
 function SWEP:Initialize()
+	BaseClass.Initialize(self)
+
 	self:SetHoldType(self.HoldType)
 
 	for _, v in ipairs(self.AttackData) do

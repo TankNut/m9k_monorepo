@@ -30,20 +30,20 @@ SWEP.Primary.Ammo = "NerveGas"
 
 SWEP.GrenadeClass = "m9k_nervegasnade"
 
-SWEP.FakeViewModel = {
+SWEP.VElements = {{
 	Model = Model("models/healthvial.mdl"),
 	Bone = "v_weapon.Flashbang_Parent",
 	Pos = Vector(-0.076, 0.24, 0.063),
 	Ang = Angle(17.351, 8.782, 99.302),
 	Scale = Vector(0.54, 0.54, 0.54),
 	Material = Material("models/weapons/gv/nerve_vial.vmt")
-}
+}}
 
-SWEP.FakeWorldModel = {
+SWEP.WElements = {{
 	Model = Model("models/healthvial.mdl"),
 	Bone = "ValveBiped.Bip01_R_Hand",
 	Pos = Vector(3.22, -2.107, -4.025),
 	Ang = Angle(0, 0, 0),
 	Scale = Vector(0.865, 0.865, 0.865),
 	Material = Material("models/weapons/gv/nerve_vial.vmt")
-}
+}}

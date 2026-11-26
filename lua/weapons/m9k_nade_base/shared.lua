@@ -1,6 +1,7 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("m9k_base")
 
-SWEP.m_WeaponDeploySpeed = 10
+SWEP.Base = "m9k_base"
 
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
@@ -22,13 +23,9 @@ SWEP.Secondary.DefaultClip = 0
 
 SWEP.GrenadeClass = "m9k_thrown_m61"
 
-AddCSLuaFile("cl_sck.lua")
-
-if CLIENT then
-	include("cl_sck.lua")
-end
-
 function SWEP:Initialize()
+	BaseClass.Initialize(self)
+
 	self:SetHoldType("normal")
 end
 
@@ -157,15 +154,11 @@ function SWEP:Think()
 end
 
 function SWEP:OnReloaded()
-	self:SetWeaponHoldType(self:GetHoldType())
+	BaseClass.OnReloaded(self)
 
-	if CLIENT then
-		self:RemoveFakeEntities()
-	end
+	self:SetWeaponHoldType(self:GetHoldType())
 end
 
 function SWEP:OnRemove()
-	if CLIENT then
-		self:RemoveFakeEntities()
-	end
+	BaseClass.OnRemove(self)
 end

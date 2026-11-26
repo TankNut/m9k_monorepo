@@ -30,17 +30,17 @@ SWEP.Primary.Ammo = "nitroG"
 
 SWEP.GrenadeClass = "m9k_thrown_nitrox"
 
-SWEP.FakeViewModel = {
+SWEP.VElements = {{
 	Model = Model("models/weapons/w_nitro.mdl"),
 	Bone = "v_weapon.Flashbang_Parent",
 	Pos = Vector(-4.538, -7.218, -14.072),
 	Ang = Angle(-164.236, 6.253, -97.573),
 	Scale = Vector(0.666, 0.666, 0.666)
-}
+}}
 
-SWEP.ViewModelBoneMods      = {
-	["v_weapon.Left_Middle01"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( 0, 17.5, 0 ) },
-	["v_weapon.Left_Ring01"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( 0, 23.271, 0 ) },
-	["v_weapon.Left_Index01"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( 0, 25.108, 0 ) },
-	["v_weapon.Left_Pinky01"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( 0, 34.459, 0 ) }
+SWEP.ViewModelBoneMods = {
+	["v_weapon.Left_Middle01"] = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0), Ang = Angle(0, 17.5, 0)},
+	["v_weapon.Left_Ring01"] = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0), Ang = Angle(0, 23.271, 0)},
+	["v_weapon.Left_Index01"] = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0), Ang = Angle(0, 25.108, 0)},
+	["v_weapon.Left_Pinky01"] = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0), Ang = Angle(0, 34.459, 0)}
 }
