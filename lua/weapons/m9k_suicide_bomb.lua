@@ -1,223 +1,225 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_suicide_bomb" -- must be the name of your swep but NO CAPITALS!
-SWEP.Category                = "M9K Specialties"
-SWEP.Author                = ""
-SWEP.Contact                = ""
-SWEP.Purpose                = "Right click to select delay" .. "\n" .. "Left click to plant."
-SWEP.Instructions                = ""
-SWEP.MuzzleAttachment            = "1"     -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment            = "2"     -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName                = "Timed C4"        -- Weapon name (Shown on HUD)
-SWEP.Slot                = 4
-SWEP.SlotPos                = 27
-SWEP.DrawAmmo                = true        -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair            = false        -- set false if you want no crosshair
-SWEP.Weight                = 30
-SWEP.AutoSwitchTo            = true
-SWEP.AutoSwitchFrom            = true
-SWEP.HoldType                 = "slam"
+AddCSLuaFile()
 
+SWEP.m_WeaponDeploySpeed = 10
 
-
-SWEP.ViewModelFOV            = 70
-SWEP.ViewModelFlip            = false
-SWEP.ViewModel                = "models/weapons/v_sb.mdl"
-SWEP.WorldModel                = "models/weapons/w_sb.mdl"
-SWEP.ShowWorldModel            = true
-SWEP.Base                = "bobs_gun_base"
-SWEP.Spawnable                = true
-SWEP.AdminSpawnable            = true
-SWEP.FiresUnderwater         = true
-
-SWEP.Primary.Sound            = ""
-SWEP.Primary.RPM                = 10        -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize            = 1
-SWEP.Primary.DefaultClip        = 1
-SWEP.Primary.KickUp                = 0        -- Maximum up recoil (rise)
-SWEP.Primary.KickDown            = 0        -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal        = 0        -- Maximum up recoil (stock)
-SWEP.Primary.Automatic            = false        -- Automatic = true; Semi Auto = false
-SWEP.Primary.Ammo            = "C4Explosive"
--- pistol, 357, smg1, ar2, buckshot, slam, SniperPenetratedRound, AirboatGun
--- Pistol, buckshot, and slam always ricochet. Use AirboatGun for a metal piercing shotgun slug
-
-SWEP.Primary.Round = "m9k_mad_c4"
-
-SWEP.Secondary.IronFOV = 0 -- How much you 'zoom' in. Less is more!
-SWEP.Timer = 0
-
-SWEP.Primary.NumShots = 0 -- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage = 0 -- Base damage per bullet
-SWEP.Primary.SpreadHip = 0 -- Define from-the-hip accuracy (1 is terrible, .0001 is exact)
-SWEP.Primary.SpreadIronSights = 0 -- Ironsight accuracy, should be the same for shotguns
-
-local ammoBoxes = {
-    ["m9k_ammo_40mm"] = true,
-    ["m9k_ammo_c4"] = true,
-    ["m9k_ammo_frags"] = true,
-    ["m9k_ammo_ieds"] = true,
-    ["m9k_ammo_nervegas"] = true,
-    ["m9k_ammo_nuke"] = true,
-    ["m9k_ammo_proxmines"] = true,
-    ["m9k_ammo_rockets"] = true,
-    ["m9k_ammo_stickynades"] = true,
-    ["m9k_ammo_357"] = true,
-    ["m9k_ammo_ar2"] = true,
-    ["m9k_ammo_buckshot"] = true,
-    ["m9k_ammo_pistol"] = true,
-    ["m9k_ammo_smg"] = true,
-    ["m9k_ammo_sniper_rounds"] = true,
-    ["m9k_ammo_winchester"] = true
-}
-
-function SWEP:PrimaryAttack()
-    if not self:CanPrimaryAttack() then
-        return
-    end
-
-    local owner = self:GetOwner()
-
-    self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-    local wait = owner:GetViewModel():SequenceDuration() + .75
-    self:SetNextPrimaryFire( CurTime() + wait )
-
-    timer.Simple( wait, function()
-        if not IsValid( self ) then return end
-        if not IsValid( owner ) then return end
-
-        local activeWeapon = owner:GetActiveWeapon()
-        if not IsValid( activeWeapon ) then return end
-        if activeWeapon ~= self then return end
-
-        if self:Clip1() == 0 and owner:GetAmmoCount( self:GetPrimaryAmmoType() ) == 0  then
-            if SERVER then
-                owner:StripWeapon( self.Gun )
-            end
-        else
-            self:SendWeaponAnim( ACT_VM_DRAW )
-            self:Reload()
-        end
-    end )
-
-    if CLIENT then return end
-
-    timer.Simple( owner:GetViewModel():SequenceDuration(), function()
-        if not IsValid( self ) then return end
-        local owner = self:GetOwner()
-        if not IsValid( owner ) then return end
-
-        local activeWeapon = owner:GetActiveWeapon()
-        if not IsValid( activeWeapon ) then return end
-        if activeWeapon ~= self then return end
-
-        if self.Timer == 0 and self:CanPrimaryAttack() then
-            owner:SetAnimation( PLAYER_ATTACK1 )
-            self:TakePrimaryAmmo( 1 )
-            self:SetNextPrimaryFire( CurTime() + 1 / ( self.Primary.RPM / 60 ) )
-            self:Suicide()
-
-            return
-        end
-
-        if self.Timer >= 5 and self:CanPrimaryAttack() then
-            self:SetNextPrimaryFire( CurTime() + 1 / ( self.Primary.RPM / 60 ) )
-            self:SetNextSecondaryFire( CurTime() + 0.3 )
-            owner:SetAnimation( PLAYER_ATTACK1 )
-            self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
-            self:TakePrimaryAmmo( 1 )
-
-            local tr = {
-                start = owner:M9K_GetShootPos(),
-                endpos = owner:M9K_GetShootPos() + 100 * owner:GetAimVector(),
-                filter = { owner }
-            }
-            local trace = util.TraceLine( tr )
-
-            local C4 = ents.Create( self.Primary.Round )
-            C4:SetPos( trace.HitPos + trace.HitNormal )
-            trace.HitNormal.z = -trace.HitNormal.z
-            C4:SetAngles( trace.HitNormal:Angle() - Angle( 90, 180, 0 ) )
-            C4.BombOwner = owner
-            C4.Timer = self.Timer
-            C4:Spawn()
-
-            local traceEnt = trace.Entity
-
-            if trace.Hit and IsValid( traceEnt ) then
-                if ammoBoxes[traceEnt:GetClass()] then
-                    C4:SetParent( traceEnt )
-                    traceEnt.Planted = true
-                    return
-                end
-
-                if not traceEnt:IsNPC() and not traceEnt:IsPlayer() then
-                    C4:SetParent( traceEnt )
-                    return
-                end
-            else
-                C4:SetMoveType( MOVETYPE_VPHYSICS )
-            end
-        end
-    end )
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_suicide_bomb")
 end
 
-function SWEP:Suicide()
-    self.BetterBeDead = true
+SWEP.BounceWeaponIcon = false
+SWEP.DrawWeaponInfoBox = false
 
-    local owner = self:GetOwner()
-    local effectdata = EffectData()
-    effectdata:SetOrigin( owner:GetPos() )
-    util.Effect( "ThumperDust", effectdata )
-    util.Effect( "Explosion", effectdata )
+SWEP.PrintName = "Timed C4"
+SWEP.Author = "TankNut"
 
-    local boomEffect = EffectData()
-    boomEffect:SetOrigin( owner:GetPos() )
-    boomEffect:SetNormal( Vector( 0, 0, 1 ) )
-    boomEffect:SetEntity( owner )
-    boomEffect:SetScale( 1.3 )
-    boomEffect:SetRadius( 67 )
-    boomEffect:SetMagnitude( 18 )
-    util.Effect( "m9k_gdcw_cinematicboom", boomEffect )
+SWEP.Category = "M9K Redux: Specialties"
 
-    util.ScreenShake( owner:GetPos(), 2000, 255, 2.5, 1250 )
-    util.BlastDamage( self, owner, owner:GetPos(), 500, 500 )
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-    owner:EmitSound( "C4.Explode", 70 )
+SWEP.Slot = 4
+
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 70
+SWEP.ViewModel = Model("models/weapons/v_sb.mdl")
+SWEP.WorldModel = Model("models/weapons/w_sb.mdl")
+
+SWEP.Primary.Ammo = "C4Explosive"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = 1
+
+SWEP.Secondary.Ammo = ""
+SWEP.Secondary.Automatic = false
+SWEP.Secondary.ClipSize = -1
+SWEP.Secondary.DefaultClip = 0
+
+function SWEP:Initialize()
+	self:SetHoldType("slam")
+end
+
+function SWEP:SetupDataTables()
+	self:NetworkVar("Float", "Delay")
+	self:NetworkVar("Float", "FinishPlant")
+
+	if SERVER then
+		self:SetDelay(5)
+	end
+end
+
+function SWEP:Deploy()
+	self:SetHoldType("slam")
+	self:SendWeaponAnim(ACT_VM_DRAW)
+	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
+	self:SetNextSecondaryFire(CurTime())
+
+	return true
+end
+
+function SWEP:Holster()
+	self:SetFinishPlant(0)
+
+	return true
+end
+
+function SWEP:PrimaryAttack()
+	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+
+	self:SetFinishPlant(CurTime() + self:SequenceDuration())
+	self:SetNextFire(math.huge)
 end
 
 function SWEP:SecondaryAttack()
-    self:SetNextPrimaryFire( CurTime() + 0.1 )
-    self:SetNextSecondaryFire( CurTime() + 0.1 )
+	self:SetNextFire(CurTime() + 0.1)
+	self:EmitSound("C4.PlantSound")
 
-    if not IsFirstTimePredicted() then return end
+	local delay = self:GetDelay()
 
-    if self.Timer == 5 then
-        self.Timer = 10
-    elseif self.Timer == 10 then
-        self.Timer = 15
-    elseif self.Timer == 15 then
-        self.Timer = 20
-    elseif self.Timer == 20 then
-        self.Timer = 0
-    elseif self.Timer == 0 then
-        self.Timer = 5
-    end
+	if delay == 5 then
+		delay = 10
+	elseif delay == 10 then
+		delay = 15
+	elseif delay == 15 then
+		delay = 20
+	elseif delay == 20 then
+		delay = 0
+	elseif delay == 0 then
+		delay = 5
+	end
 
-    local owner = self:GetOwner()
+	self:SetDelay(delay)
 
-    owner:EmitSound( "C4.PlantSound" )
+	if SERVER then
+		local ply = self:GetOwner()
 
-    if CLIENT then
-        if self.Timer == 0 then
-            owner:PrintMessage( HUD_PRINTCENTER, "WARNING! TIMER REDUCED TO ZERO!" )
-        else
-            owner:PrintMessage( HUD_PRINTCENTER, string.format( "Timer set to %s Seconds.", self.Timer ) )
-        end
-    end
+		if delay == 0 then
+			ply:PrintMessage(HUD_PRINTCENTER, "WARNING! TIMER REDUCED TO ZERO!")
+		else
+			ply:PrintMessage(HUD_PRINTCENTER, string.format("Timer set to %s.", string.NiceTime(delay)))
+		end
+	end
 end
 
-function SWEP:ThinkCustom()
-    if self.BetterBeDead then
-        self:GetOwner():Kill()
-    end
+function SWEP:Reload()
+end
+
+local ammoBoxes = {
+	["m9k_ammo_40mm"] = true,
+	["m9k_ammo_c4"] = true,
+	["m9k_ammo_frags"] = true,
+	["m9k_ammo_ieds"] = true,
+	["m9k_ammo_nervegas"] = true,
+	["m9k_ammo_nuke"] = true,
+	["m9k_ammo_proxmines"] = true,
+	["m9k_ammo_rockets"] = true,
+	["m9k_ammo_stickynades"] = true,
+	["m9k_ammo_357"] = true,
+	["m9k_ammo_ar2"] = true,
+	["m9k_ammo_buckshot"] = true,
+	["m9k_ammo_pistol"] = true,
+	["m9k_ammo_smg"] = true,
+	["m9k_ammo_sniper_rounds"] = true,
+	["m9k_ammo_winchester"] = true
+}
+
+function SWEP:PlantC4()
+	self:TakePrimaryAmmo(1)
+
+	local ply = self:GetOwner()
+
+	ply:SetAnimation(PLAYER_ATTACK1)
+
+	self:SendWeaponAnim(ACT_VM_DRAW)
+	self:SetNextPrimaryFire(CurTime() + self:SequenceDuration())
+	self:SetNextSecondaryFire(CurTime())
+
+	if SERVER then
+		local tr = util.TraceLine({
+			start = ply:M9K_GetShootPos(),
+			endpos = ply:M9K_GetShootPos() + ply:GetAimVector() * 100,
+			filter = ply
+		})
+
+		tr.HitNormal.z = -tr.HitNormal.z
+
+		local ent = ents.Create("m9k_mad_c4")
+		ent:SetPos(tr.HitPos + tr.HitNormal)
+		ent:SetAngles(tr.HitNormal:Angle() - Angle(90, 180, 0))
+		ent.BombOwner = ply
+		ent.Timer = self:GetDelay()
+		ent:Spawn()
+		ent:Activate()
+
+		print(ent)
+
+		if tr.Hit then
+			local attach = tr.Entity
+
+			if ammoBoxes[attach:GetClass()] then
+				ent:SetParent(attach)
+				attach.Planted = true
+			elseif not attach:IsNPC() and not attach:IsPlayer() then
+				ent:SetParent(attach)
+			end
+		else
+			ent:SetMoveType(MOVETYPE_VPHYSICS)
+		end
+
+		if self:Ammo1() == 0 then
+			ply:StripWeapon(self:GetClass())
+		end
+	end
+end
+
+function SWEP:Suicide()
+	if not IsFirstTimePredicted() then return end
+
+	local ply = self:GetOwner()
+	local pos = ply:GetPos()
+
+	local effect = EffectData()
+	effect:SetOrigin(pos)
+
+	util.Effect("ThumperDust", effect)
+	util.Effect("Explosion", effect)
+
+	effect:SetNormal(Vector(0, 0, 1))
+	effect:SetEntity(owner)
+	effect:SetScale(1.3)
+	effect:SetRadius(67)
+	effect:SetMagnitude(18)
+	util.Effect("m9k_gdcw_cinematicboom", effect)
+
+	self:TakePrimaryAmmo(1)
+
+	ply:Kill()
+
+	util.ScreenShake(pos, 2000, 255, 2.5, 1250)
+	util.BlastDamage(self, ply, pos, 500, 500)
+
+	self:EmitSound("C4.Explode", 70)
+end
+
+function SWEP:Think()
+	local time = self:GetFinishPlant()
+	local ct = CurTime()
+
+	if time > 0 and time <= ct then
+		self:SetFinishPlant(0)
+
+		if self:GetDelay() == 0 then
+			self:Suicide()
+		else
+			self:PlantC4()
+		end
+	end
+end
+
+function SWEP:SetNextFire(time)
+	self:SetNextPrimaryFire(time)
+	self:SetNextSecondaryFire(time)
+end
+
+function SWEP:OnReloaded()
+	self:SetWeaponHoldType(self:GetHoldType())
 end
