@@ -1,158 +1,218 @@
--- Variables that are used on both client and server
-SWEP.Gun = "m9k_orbital_strike" -- must be the name of your swep
+AddCSLuaFile()
+DEFINE_BASECLASS("m9k_base")
 
-SWEP.Category                 = "M9K Specialties"
-SWEP.Author                   = ""
-SWEP.Contact                  = ""
-SWEP.Purpose                  = ""
-SWEP.Instructions             = ""
-SWEP.MuzzleAttachment         = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellEjectAttachment     = "2" -- Should be "2" for CSS models or "1" for hl2 models
-SWEP.PrintName                = "Orbital Strike Marker" -- Weapon name (Shown on HUD)
-SWEP.Slot                     = 4
-SWEP.SlotPos                  = 35
-SWEP.DrawAmmo                 = true -- Should draw the default HL2 ammo counter
-SWEP.DrawCrosshair            = false
-SWEP.Weight                   = 50
-SWEP.AutoSwitchTo             = true
-SWEP.AutoSwitchFrom           = true
-SWEP.XHair                    = false -- Used for returning crosshair after scope. Must be the same as DrawCrosshair
-SWEP.HoldType                 = "camera"
+SWEP.Base = "m9k_base"
 
-SWEP.ViewModelFOV             = 70
-SWEP.ViewModelFlip            = false
-SWEP.ViewModel                = "models/weapons/v_invisib.mdl"
-SWEP.WorldModel               = "models/weapons/w_binos.mdl"
-SWEP.Base                     = "bobs_scoped_base"
-SWEP.Spawnable                = true
-SWEP.AdminSpawnable           = true
+if CLIENT then
+	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_orbital_strike")
+end
 
-SWEP.Primary.Sound            = "weapons/satellite/targaquired.ogg"
-SWEP.Primary.RPM              = 50 -- This is in Rounds Per Minute
-SWEP.Primary.ClipSize         = 1
-SWEP.Primary.DefaultClip      = 1
-SWEP.Primary.KickUp           = 1 -- Maximum up recoil (rise)
-SWEP.Primary.KickDown         = 1 -- Maximum down recoil (skeet)
-SWEP.Primary.KickHorizontal   = 1 -- Maximum up recoil (stock)
-SWEP.Primary.Automatic        = false -- Automatic/Semi Auto
-SWEP.Primary.Ammo             = "SatCannon"
+SWEP.BounceWeaponIcon = false
+SWEP.DrawWeaponInfoBox = false
 
-SWEP.Secondary.ScopeZoom      = 5
-SWEP.Secondary.UseParabolic   = false -- Choose your scope type,
-SWEP.Secondary.UseACOG        = false
-SWEP.Secondary.UseMilDot      = true
-SWEP.Secondary.UseSVD         = false
-SWEP.Secondary.UseElcan       = false
-SWEP.Secondary.UseGreenDuplex = false
+SWEP.PrintName = "Orbital Strike Marker"
+SWEP.Author = "TankNut"
 
-SWEP.data                     = {} --The starting firemode
-SWEP.data.ironsights          = 1
-SWEP.ScopeScale               = 1
+SWEP.Category = "M9K Redux: Specialties"
 
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
 
-SWEP.SightsPos                = Vector( -3.589, -8.867, -4.124 )
-SWEP.SightsAng                = Vector( 50.353, 17.884, -19.428 )
-SWEP.RunSightsPos             = Vector( 0, 0, 0 )
-SWEP.RunSightsAng             = Vector( -21.994, 0, 0 )
+SWEP.Slot = 4
 
-SWEP.ViewModelBoneMods        = {
-    ["l-ring-low"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -19.507, 0, 0 ) },
-    ["r-index-mid"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -71.792, 0, 0 ) },
-    ["r-middle-low"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -21.483, 1.309, 0 ) },
-    ["l-upperarm-movement"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, -0.88 ), angle = Angle( 0, 0, 0 ) },
-    ["Da Machete"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0.263, -1.826 ), angle = Angle( 0, 0, 0 ) },
-    ["r-ring-low"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -17.507, 0, 0 ) },
-    ["r-pinky-mid"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -47.32, 0, 0 ) },
-    ["r-ring-mid"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -54.065, 0, 0 ) },
-    ["r-index-low"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -49.646, 0, 0 ) },
-    ["r-thumb-tip"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -17.666, 0, 0 ) },
-    ["r-upperarm-movement"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 7.394, 2.101, -9.54 ), angle = Angle( -10.502, -12.632, 68.194 ) },
-    ["r-pinky-low"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -21.526, 0, 0 ) },
-    ["r-middle-mid"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -37.065, 0, 0 ) },
-    ["r-thumb-mid"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -4.816, 18.775, -30.143 ) },
-    ["l-index-low"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -49.646, 0, 0 ) },
-    ["r-thumb-low"] = { scale = Vector( 1, 1, 1 ), pos = Vector( 0, 0, 0 ), angle = Angle( -0.982, 0, 0 ) }
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 70
+SWEP.ViewModel = Model("models/weapons/v_invisib.mdl")
+SWEP.WorldModel = Model("models/weapons/w_binos.mdl")
+
+SWEP.Primary.Ammo = "SatCannon"
+SWEP.Primary.Automatic = false
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = 1
+
+SWEP.Secondary.Ammo = ""
+SWEP.Secondary.Automatic = false
+SWEP.Secondary.ClipSize = -1
+SWEP.Secondary.DefaultClip = 0
+
+SWEP.VElements = {{
+	Model = "models/weapons/binos.mdl",
+	Bone = "r-thumb-low",
+	Pos = Vector(3.907, -0.109, -1.125),
+	Ang = Angle(-2.829, 27.281, 105.791),
+	Scale = Vector(0.5, 0.5, 0.5 )
+}}
+
+SWEP.ViewModelBoneMods = {
+	["l-ring-low"]          = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-19.507, 0, 0)},
+	["r-index-mid"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-71.792, 0, 0)},
+	["r-middle-low"]        = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-21.483, 1.309, 0)},
+	["l-upperarm-movement"] = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, -0.88),         Ang = Angle(0, 0, 0)},
+	["Da Machete"]          = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0.263, -1.826),    Ang = Angle(0, 0, 0)},
+	["r-ring-low"]          = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-17.507, 0, 0)},
+	["r-pinky-mid"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-47.32, 0, 0)},
+	["r-ring-mid"]          = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-54.065, 0, 0)},
+	["r-index-low"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-49.646, 0, 0)},
+	["r-thumb-tip"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-17.666, 0, 0)},
+	["r-upperarm-movement"] = {Scale = Vector(1, 1, 1), Pos = Vector(7.394, 2.101, -9.54), Ang = Angle(-10.502, -12.632, 68.194)},
+	["r-pinky-low"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-21.526, 0, 0)},
+	["r-middle-mid"]        = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-37.065, 0, 0)},
+	["r-thumb-mid"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-4.816, 18.775, -30.143)},
+	["l-index-low"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-49.646, 0, 0)},
+	["r-thumb-low"]         = {Scale = Vector(1, 1, 1), Pos = Vector(0, 0, 0),             Ang = Angle(-0.982, 0, 0)}
 }
 
-SWEP.VElements                = {
-    ["binos"] = { type = "Model", model = "models/weapons/binos.mdl", bone = "r-thumb-low", rel = "", pos = Vector( 3.907, -0.109, -1.125 ), angle = Angle( -2.829, 27.281, 105.791 ), size = Vector( 0.5,
-        0.5, 0.5 ), color = Color( 255, 255, 255, 255 ), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-}
+local cvar_AdminOnly = GetConVar("OrbitalStrikeAdminOnly")
 
-SWEP.PoorBastard              = false
-SWEP.NextShoot                = 0
+function SWEP:Initialize()
+	BaseClass.Initialize(self)
+
+	self:SetHoldType("camera")
+end
+
+function SWEP:SetupDataTables()
+	self:InterpolatedNetworkVar("AimState")
+end
+
+function SWEP:Deploy()
+	self:SetHoldType("camera")
+	self:SendWeaponAnim(ACT_VM_DRAW)
+	self:SetNextPrimaryFire(math.max(CurTime() + self:SequenceDuration(), self:GetNextPrimaryFire()))
+
+	return true
+end
 
 function SWEP:PrimaryAttack()
-    self.PoorBastard = false
-    if not IsFirstTimePredicted() then return end
+	local ply = self:GetOwner()
 
-    local owner = self:GetOwner()
+	if cvar_AdminOnly:GetBool() and not ply:IsAdmin() then
+		if SERVER then
+			ply:PrintMessage(HUD_PRINTCENTER, "Orbital strikes are admin only on this server.")
+		end
 
-    if self:CanPrimaryAttack() and owner:IsPlayer() and self.NextShoot <= CurTime() then
-        if GetConVar( "OrbitalStrikeAdminOnly" ):GetBool() and not owner:IsAdmin() then
-            owner:PrintMessage( HUD_PRINTCENTER, "Orbital strikes are admin only on this server." )
-            return
-        end
+		self:SetNextPrimaryFire(CurTime() + 0.2)
 
-        if ( not self:IsRunning() or self.CanShootWhileRunning ) and not owner:KeyDown( IN_RELOAD ) then
-            local mark = owner:GetEyeTrace()
-            if mark.HitSky then
-                owner:EmitSound( "player/suit_denydevice.wav" )
-            end
+		return
+	end
 
-            local skytrace = {}
-            skytrace.start = mark.HitPos
-            skytrace.endpos = mark.HitPos + Vector( 0, 0, 65000 )
-            local skycheck = util.TraceLine( skytrace )
-            if skycheck.HitSky then
-                if SERVER then
-                    local Sky = skycheck.HitPos - Vector( 0, 0, 10 )
-                    local Ground = mark.HitPos
-                    local Satellite = ents.Create( "m9k_oribital_cannon" )
-                    Satellite.Ground = Ground
-                    Satellite.Sky = Sky
-                    Satellite.Owner = owner
-                    Satellite:SetPos( Sky ) --was sky but for testing, its this
-                    Satellite:Spawn()
-                end
-                if SERVER then owner:EmitSound( self.Primary.Sound ) end
-                self:TakePrimaryAmmo( 1 )
-                self:SetNextPrimaryFire( CurTime() + 15 )
-                self.NextShoot = CurTime() + 15
-                self:CheckWeaponsAndAmmo()
-                self:Reload()
-            elseif mark.Entity:IsPlayer() or mark.Entity:IsNPC() then
-                self.PoorBastard = true
-                local thetarget = mark.Entity
-                local skytrace2 = {}
-                skytrace2.start = thetarget:GetPos()
-                skytrace2.endpos = thetarget:GetPos() + Vector( 0, 0, 65000 )
-                skytrace2.filter = thetarget
-                local skycheck2 = util.TraceLine( skytrace2 )
-                if skycheck2.HitSky then --someone's gonna be in big trouble
-                    local sky2 = skycheck2.HitPos - Vector( 0, 0, 10 )
-                    if SERVER then
-                        local Satellite = ents.Create( "m9k_oribital_cannon" )
-                        --Satellite.Ground = Ground
-                        Satellite.PoorBastard = true
-                        Satellite.Target = thetarget
-                        Satellite.Sky = sky2
-                        Satellite.Owner = owner
-                        Satellite:SetPos( sky2 )
-                        Satellite:Spawn()
-                    end
-                    owner:EmitSound( self.Primary.Sound )
-                    self:TakePrimaryAmmo( 1 )
-                    self:SetNextPrimaryFire( CurTime() + 15 )
-                    self.NextShoot = CurTime() + 15
-                    self:CheckWeaponsAndAmmo()
-                    self:Reload()
-                else
-                    owner:EmitSound( "player/suit_denydevice.wav" )
-                end
-            else
-                owner:EmitSound( "player/suit_denydevice.wav" )
-            end
-        end
-    end
+	local tr = ply:GetEyeTrace()
+
+	if tr.HitSky then
+		self:EmitSound("WallHealth.Deny")
+		self:SetNextPrimaryFire(CurTime() + 0.2)
+
+		return
+	end
+
+	local sky = util.TraceLine({
+		start = tr.HitPos,
+		endpos = tr.HitPos + Vector(0, 0, 56756),
+		mask = MASK_VISIBLE
+	})
+
+	if sky.HitSky then
+		local target
+
+		if tr.Entity:IsPlayer() or tr.Entity:IsNPC() then
+			target = tr.Entity
+		end
+
+		if SERVER then
+			local ent = ents.Create("m9k_oribital_cannon")
+
+			if target then
+				ent.PoorBastard = true
+				ent.Target = target
+			else
+				ent.Ground = tr.HitPos
+			end
+
+			ent.Sky = sky.HitPos - Vector(0, 0, 10)
+			ent.Owner = ply
+			ent:SetPos(ent.Sky)
+			ent:Spawn()
+		end
+	else
+		self:EmitSound("WallHealth.Deny")
+		self:SetNextPrimaryFire(CurTime() + 0.2)
+
+		return
+	end
+
+	self:EmitSound("weapons/satellite/targaquired.ogg")
+
+	self:TakePrimaryAmmo(1)
+	self:SetNextPrimaryFire(CurTime() + 15)
+
+	if SERVER and self:Ammo1() == 0 then
+		ply:StripWeapon(self:GetClass())
+	end
+end
+
+function SWEP:SecondaryAttack()
+end
+
+function SWEP:Reload()
+end
+
+function SWEP:Think()
+	local ply = self:GetOwner()
+
+	self:SetAimState(math.Approach(self:GetAimState(), ply:KeyDown(IN_ATTACK2) and 1 or 0, FrameTime() / 0.15))
+end
+
+-- mathlib.h
+local function simpleSplineRemapValClamped(value, a, b, c, d)
+	if a == b then return value >= b and d or c end
+
+	value = math.Clamp((value - a) / (b - a), 0, 1)
+	local valueSquared = value * value
+
+	return c + (d - c) * (3 * valueSquared - 2 * valueSquared * value)
+end
+
+function SWEP:GetZoom()
+	return simpleSplineRemapValClamped(self:GetAimState(), 0, 1, 1, 5)
+end
+
+function SWEP:TranslateFOV(fov)
+	local ply = self:GetOwner()
+
+	if ply:GetViewEntity() != ply then
+		return
+	end
+
+	return fov / self:GetZoom()
+end
+
+if CLIENT then
+	local gdcw_scopesight = surface.GetTextureID("scope/gdcw_scopesight")
+
+	function SWEP:DrawHUD()
+		if not self:GetOwner():KeyDown(IN_ATTACK2) then
+			return
+		end
+
+		surface.SetDrawColor(0, 0, 0, 255)
+
+		local scrW = ScrW()
+		local scrH = ScrH()
+
+		local size = scrH + 1
+
+		surface.SetTexture(gdcw_scopesight)
+		surface.DrawTexturedRect(scrW * 0.5 - size, scrH * 0.5 - size, size * 2, size * 2)
+	end
+
+	function SWEP:DoDrawCrosshair(x, y)
+		return true
+	end
+
+	function SWEP:PreDrawViewModel(vm, ply, weapon, flags)
+		if self:GetOwner():KeyDown(IN_ATTACK2) then
+			return true
+		end
+
+		return BaseClass.PreDrawViewModel(self, vm, ply, weapon, flags)
+	end
 end
