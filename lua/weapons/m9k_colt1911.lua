@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "Colt 1911"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Pistols"
+SWEP.Category = "M9K Pistols"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

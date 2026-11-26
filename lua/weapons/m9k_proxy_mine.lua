@@ -12,7 +12,7 @@ SWEP.DrawWeaponInfoBox = false
 SWEP.PrintName = "Prox Mine"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Specialties"
+SWEP.Category = "M9K Specialties"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

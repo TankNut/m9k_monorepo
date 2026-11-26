@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "FG 42"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Machine Guns"
+SWEP.Category = "M9K Machine Guns"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

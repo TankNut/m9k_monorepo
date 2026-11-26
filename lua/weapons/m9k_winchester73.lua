@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "73 Winchester Carbine"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Assault Rifles"
+SWEP.Category = "M9K Assault Rifles"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "Remington 7615P"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Sniper Rifles"
+SWEP.Category = "M9K Sniper Rifles"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

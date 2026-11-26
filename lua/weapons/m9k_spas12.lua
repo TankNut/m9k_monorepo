@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "SPAS 12"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Shotguns"
+SWEP.Category = "M9K Shotguns"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

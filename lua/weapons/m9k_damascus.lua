@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "Damascus Sword"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Specialties"
+SWEP.Category = "M9K Specialties"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

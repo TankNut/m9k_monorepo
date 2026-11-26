@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "M4A1 Iron"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Assault Rifles"
+SWEP.Category = "M9K Assault Rifles"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

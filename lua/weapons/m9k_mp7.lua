@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "HK MP7"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Redux: Submachine Guns"
+SWEP.Category = "M9K Submachine Guns"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
