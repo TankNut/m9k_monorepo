@@ -19,3 +19,5 @@ CreateConVar( "nuke_breakconstraints", 1, { FCVAR_REPLICATED, FCVAR_ARCHIVE }, "
 CreateConVar( "nuke_disintegration", 1, { FCVAR_REPLICATED, FCVAR_ARCHIVE }, "nuke variables" )
 CreateConVar( "nuke_damage", 100, { FCVAR_REPLICATED, FCVAR_ARCHIVE }, "nuke variables" )
 CreateConVar( "nuke_epic_blast.mp3e", 1, { FCVAR_REPLICATED, FCVAR_ARCHIVE }, "nuke variables" )
+
+CreateConVar( "m9k_enginespread", 0, { FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_NOTIFY }, "Use engine spread for M9K weapons, not recommended" )
