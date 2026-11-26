@@ -119,13 +119,7 @@ function SWEP:FinishReload()
 
 	if self:Ammo1() == 0 then
 		if SERVER then
-			local ply = self:GetOwner()
-
-			timer.Simple(0, function()
-				if not ply:IsPlayer() or not self:IsValid() then return end
-
-				ply:StripWeapon(self:GetClass())
-			end)
+			self:GetOwner():StripWeapon(self:GetClass())
 		end
 	else
 		self:SendWeaponAnim(ACT_VM_DRAW)

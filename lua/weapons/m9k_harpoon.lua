@@ -71,11 +71,7 @@ function SWEP:PrimaryAttack()
 		phys:SetVelocity(dir * 2000)
 
 		if self:Ammo1() == 0 then
-			timer.Simple(0, function()
-				if not ply:IsPlayer() or not self:IsValid() then return end
-
-				ply:StripWeapon(self:GetClass())
-			end)
+			ply:StripWeapon(self:GetClass())
 		end
 	end
 

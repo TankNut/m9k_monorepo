@@ -19,14 +19,7 @@ function SWEP:CheckAmmo()
 
 	-- No ammo
 	if cvar_WeaponStrip:GetBool() and SERVER then
-		local ply = self:GetOwner()
-
-		-- Doesn't always run on the next tick, but does here
-		timer.Simple(0, function()
-			if not ply:IsPlayer() or not self:IsValid() then return end
-
-			ply:StripWeapon(self:GetClass())
-		end)
+		self:GetOwner():StripWeapon(self:GetClass())
 	end
 end
 
