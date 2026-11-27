@@ -66,11 +66,12 @@ function SWEP:PrimaryAttack()
 	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 
 	self:SetFinishPlant(CurTime() + self:SequenceDuration())
-	self:SetNextFire(math.huge)
+	self:SetNextPrimaryFire(math.huge)
+	self:SetNextSecondaryFire(math.huge)
 end
 
 function SWEP:SecondaryAttack()
-	self:SetNextFire(CurTime() + 0.1)
+	self:SetNextSecondaryFire(CurTime() + 0.1)
 	self:EmitSound("C4.PlantSound")
 
 	local delay = self:GetDelay()
@@ -177,10 +178,12 @@ function SWEP:Suicide()
 
 	self:TakePrimaryAmmo(1)
 
-	ply:Kill()
+	if SERVER then
+		ply:Kill()
 
-	util.ScreenShake(pos, 2000, 255, 2.5, 1250)
-	util.BlastDamage(self, ply, pos, 500, 500)
+		util.ScreenShake(pos, 2000, 255, 2.5, 1250)
+		util.BlastDamage(self, ply, pos, 500, 500)
+	end
 
 	self:EmitSound("C4.Explode", 70)
 end
@@ -198,11 +201,6 @@ function SWEP:Think()
 			self:PlantC4()
 		end
 	end
-end
-
-function SWEP:SetNextFire(time)
-	self:SetNextPrimaryFire(time)
-	self:SetNextSecondaryFire(time)
 end
 
 function SWEP:OnReloaded()
