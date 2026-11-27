@@ -7,6 +7,8 @@ if CLIENT then
 	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_honeybadger")
 end
 
+SWEP.DrawCrosshair = true
+
 -- Base info
 SWEP.PrintName = "AAC Honey Badger"
 SWEP.Author = "TankNut"

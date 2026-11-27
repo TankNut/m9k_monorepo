@@ -3,6 +3,8 @@ DEFINE_BASECLASS("m9k_gun_base")
 
 SWEP.Base = "m9k_gun_base"
 
+SWEP.DrawCrosshair = false
+
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 70
 
@@ -188,5 +190,9 @@ function SWEP:DrawHUD()
 end
 
 function SWEP:DoDrawCrosshair(x, y)
-	return true
+	if self:InScope() then
+		return true
+	end
+
+	return BaseClass.DoDrawCrosshair(self, x, y)
 end

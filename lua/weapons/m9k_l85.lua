@@ -7,6 +7,8 @@ if CLIENT then
 	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_l85")
 end
 
+SWEP.DrawCrosshair = true
+
 -- Base info
 SWEP.PrintName = "L85"
 SWEP.Author = "TankNut"

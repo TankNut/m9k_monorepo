@@ -7,6 +7,8 @@ if CLIENT then
 	SWEP.WepSelectIcon = surface.GetTextureID("vgui/hud/m9k_scoped_taurus")
 end
 
+SWEP.DrawCrosshair = true
+
 -- Base info
 SWEP.PrintName = "Raging Bull - Scoped"
 SWEP.Author = "TankNut"
@@ -59,7 +61,7 @@ SWEP.ReticleScale = 0.6
 -- Extra modes
 SWEP.SelectiveFire = false -- If set, E+R switches between semi and full-auto
 SWEP.CanBeSilenced = false -- If set, E+RMB attaches a suppressor
-SWEP.BoltAction = true -- Forces unscoping between shots
+SWEP.BoltAction = false -- Forces unscoping between shots
 
 -- Viewmodel offsets
 SWEP.CustomIdlePos = Vector(0, 1, -1) -- Applied when the weapon is idle
