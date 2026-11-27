@@ -11,7 +11,7 @@ end
 SWEP.PrintName = "SR-3M Vikhr"
 SWEP.Author = "TankNut"
 
-SWEP.Category = "M9K Submachine Guns"
+SWEP.Category = "M9K Assault Rifles"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
