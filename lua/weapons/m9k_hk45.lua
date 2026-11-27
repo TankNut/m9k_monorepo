@@ -30,8 +30,8 @@ SWEP.HoldType = "pistol"
 -- Stats
 SWEP.Primary.Ammo = "pistol"
 SWEP.Primary.Automatic = false
-SWEP.Primary.ClipSize = 32
-SWEP.Primary.DefaultClip = 64
+SWEP.Primary.ClipSize = 8
+SWEP.Primary.DefaultClip = 45
 
 SWEP.Primary.RPM = 750 -- Rounds Per Minute
 SWEP.Primary.NumShots = 1 -- Bullets fired per shot
