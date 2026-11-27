@@ -178,6 +178,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:ShouldRunState()
+	if self.CanShootWhileRunning then return false end
 	if self:IsReloading() then return false end
 
 	return self:GetRunning()

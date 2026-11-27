@@ -89,7 +89,7 @@ function SWEP:GetViewModelPosition(pos, ang)
 end
 
 function SWEP:DoDrawCrosshair()
-	if self:IsReloading() or self:GetRunning() then
+	if self:IsReloading() or (self:GetRunning() and not self.CanShootWhileRunning) then
 		return true
 	end
 end
