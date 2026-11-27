@@ -241,6 +241,12 @@ function SWEP:Throw(class, snd)
 		phys:SetVelocity(ply:GetAimVector() * 1500)
 		phys:AddAngleVelocity(Vector(0, 500, 0))
 
-		ply:StripWeapon(self:GetClass())
+		timer.Simple(0, function()
+			if not self:IsValid() or not ply:IsValid() then
+				return
+			end
+
+			ply:StripWeapon(self:GetClass())
+		end)
 	end
 end

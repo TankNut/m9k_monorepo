@@ -19,7 +19,15 @@ function SWEP:CheckAmmo()
 
 	-- No ammo
 	if cvar_WeaponStrip:GetBool() and SERVER then
-		self:GetOwner():StripWeapon(self:GetClass())
+		local ply = self:GetOwner()
+
+		timer.Simple(0, function()
+			if not self:IsValid() or not ply:IsValid() then
+				return
+			end
+
+			ply:StripWeapon(self:GetClass())
+		end)
 	end
 end
 
