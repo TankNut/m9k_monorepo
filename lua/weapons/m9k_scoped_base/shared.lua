@@ -71,7 +71,7 @@ end
 function SWEP:Deploy()
 	self:SetLastFire(0)
 
-	BaseClass.Deploy(self)
+	return BaseClass.Deploy(self)
 end
 
 function SWEP:FireWeapon()
