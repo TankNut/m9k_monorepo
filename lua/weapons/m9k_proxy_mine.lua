@@ -50,6 +50,12 @@ function SWEP:Deploy()
 	return true
 end
 
+function SWEP:Holster()
+	self:SetFinishPlant(0)
+
+	return true
+end
+
 function SWEP:PrimaryAttack()
 	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 
