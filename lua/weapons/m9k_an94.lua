@@ -31,7 +31,7 @@ SWEP.HoldType = "ar2"
 -- Stats
 SWEP.Primary.Ammo = "ar2"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 20
+SWEP.Primary.ClipSize = 30
 SWEP.Primary.DefaultClip = 60
 
 SWEP.Primary.RPM = 600 -- Rounds Per Minute
@@ -88,5 +88,12 @@ function SWEP:FireEffects()
 end
 
 function SWEP:ModifyBullet(bullet)
-	bullet.Num = self:GetAutomatic() and 1 or 2
+	if not self:GetAutomatic() then
+		local spread = self:GetAimCone()
+		local owner = self:GetOwner()
+
+		bullet.Num = 2
+		bullet.Dir = (owner:GetAimVector():Angle() + owner:GetViewPunchAngles()):Forward()
+		bullet.Spread = Vector(spread, spread)
+	end
 end

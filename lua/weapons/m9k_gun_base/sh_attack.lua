@@ -82,7 +82,7 @@ function SWEP:GetSpread()
 
 	local dir = (owner:GetAimVector():Angle() + owner:GetViewPunchAngles()):Forward()
 
-	if cvar_EngineSpread:GetBool() then
+	if cvar_EngineSpread:GetBool() or self.Primary.NumShots > 1 then
 		return dir, Vector(aimcone, aimcone)
 	else
 		return getSpread(self, dir, aimcone), vector_origin
