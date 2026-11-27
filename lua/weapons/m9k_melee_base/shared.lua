@@ -1,4 +1,7 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("m9k_base")
+
+SWEP.Base = "m9k_base"
 
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
