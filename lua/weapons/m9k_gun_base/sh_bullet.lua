@@ -118,10 +118,9 @@ sound.Add({
 	}
 })
 
-local ricochetAmmo = {
+local ricochetBlacklist = {
 	["pistol"] = true,
 	["buckshot"] = true,
-	["slam"] = true,
 	["SniperPenetratedRound"] = true
 }
 
@@ -130,7 +129,7 @@ local function sharedRandomChance(name, percentage, seed)
 end
 
 function SWEP:BulletRicochet(iteration, attacker, tr, damage)
-	if not ricochetAmmo[self.Primary.Ammo] and sharedRandomChance("m9k_ricochet", 75) then return false end
+	if ricochetBlacklist[self.Primary.Ammo] or not sharedRandomChance("m9k_ricochet", 40) then return false end
 
 	if tr.MatType != MAT_METAL then
 		-- None of this other code makes sense so I'm just leaving it
