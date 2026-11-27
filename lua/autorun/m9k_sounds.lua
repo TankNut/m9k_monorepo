@@ -641,7 +641,7 @@ AddSound( "Weapon_TDegle.Slideback", CHAN_AUTO, 1, "weapons/fokku_tc_deagle/de_s
 AddSound( "Weapon_TDegle.Deploy", CHAN_AUTO, 1, "weapons/fokku_tc_deagle/de_deploy.ogg" )
 
 -- Sig P229R
-AddSound( "Sauer1_P228.Single", CHAN_AUTO, 1, "weapons/sig_p228/p228-1.ogg" )
+AddSound( "Sauer1_P228.Single", CHAN_WEAPON, 1, "weapons/sig_p228/p228-1.ogg" )
 AddSound( "Sauer1_P228.Magout", CHAN_AUTO, 1, "weapons/sig_p228/magout.ogg" )
 AddSound( "Sauer1_P228.Magin", CHAN_AUTO, 1, "weapons/sig_p228/magin.ogg" )
 AddSound( "Sauer1_P228.MagShove", CHAN_AUTO, 1, "weapons/sig_p228/magshove.ogg" )
