@@ -157,7 +157,7 @@ local aimpoint = surface.GetTextureID("scope/aimpoint")
 local rocketscope = surface.GetTextureID("scope/rocketscope")
 
 function SWEP:DrawHUD()
-	if not self:InScope() then
+	if self:GetOwner():InVehicle() or not self:InScope() then
 		return
 	end
 

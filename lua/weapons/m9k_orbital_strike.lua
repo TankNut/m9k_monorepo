@@ -184,7 +184,7 @@ end
 function SWEP:TranslateFOV(fov)
 	local ply = self:GetOwner()
 
-	if ply:GetViewEntity() != ply then
+	if ply:InVehicle() or ply:GetViewEntity() != ply then
 		return
 	end
 
@@ -195,7 +195,7 @@ if CLIENT then
 	local gdcw_scopesight = surface.GetTextureID("scope/gdcw_scopesight")
 
 	function SWEP:DrawHUD()
-		if not self:GetOwner():KeyDown(IN_ATTACK2) then
+		if self:GetOwner():InVehicle() or not self:GetOwner():KeyDown(IN_ATTACK2) then
 			return
 		end
 

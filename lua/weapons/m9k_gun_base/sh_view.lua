@@ -26,7 +26,7 @@ end
 function SWEP:TranslateFOV(fov)
 	local ply = self:GetOwner()
 
-	if ply:GetViewEntity() != ply then
+	if ply:InVehicle() or ply:GetViewEntity() != ply then
 		return
 	end
 
